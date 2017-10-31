@@ -182,11 +182,20 @@ A request to store data typically consists of a POST request with the data to be
 
 2. Create an in-memory data store for the ToDo items
    1. Open the Sources > Application > Application.swift file
-   2. Add a "todoStore" into the App class
-   On the line below `let cloudEnv = CloudEnv()` add:  
+   2. Add a "todoStore" and a "serialQueue" into the App class. On the line below `let cloudEnv = CloudEnv()` add:  
    ```swift
    private var todoStore = [ToDo]()
+   private let workerQueue = DispatchQueue(label: "worker")
    ```
+   3. Add a helper method at the end of the class, before the last closing brace
+   ```swift
+    func execute(_ block: (() -> Void)) {
+       workerQueue.sync {
+           block()
+       }
+    }
+   ```
+   This will be used to make sure that access to shared resources is serialized so the app does not crash on concurrent requests.
 
 3. Register a handler for a `POST` request on `/` that stores the ToDo item data  
    1. Add the following into the `postInit()` function:
@@ -203,7 +212,9 @@ A request to store data typically consists of a POST request with the data to be
         }
         let id = todoStore.count
         todo.url = "http://localhost:8080/\(id)"
-        todoStore.append(todo)
+        execute {
+            todoStore.append(todo)
+        }
         completion(todo, nil)
     }
    ``` 
@@ -231,7 +242,9 @@ In order to pass the next test, the ToDoServer needs to handle a DELETE on / res
    Add the following as a function in the App class:  
    ```swift
     func deleteAllHandler(completion: (RequestError?) -> Void ) -> Void {
-        todoStore = [ToDo]()
+        execute {
+            todoStore = [ToDo]()
+        }
         completion(nil)
     }
    ```
@@ -306,7 +319,9 @@ The failing test is trying to `PATCH` a specific ToDo item. A `PATCH` request up
         current.order = new.order ?? new.order
         current.title = new.title ?? current.title
         current.completed = new.completed ?? current.completed
-        todoStore[id] = current
+        execute {
+            todoStore[id] = current
+        }
         completion(todoStore[id], nil)
     }
    ```
@@ -332,7 +347,9 @@ The failing test is trying to `DELETE` a specific ToDo item. This means register
 2. Implement the `deleteOneHandler` that receives an `id` and removes the specified ToDo item:
    ```swift
     func deleteOneHandler(id: Int, completion: (RequestError?) -> Void ) -> Void {
-        todoStore.remove(at: id)
+        execute {
+            todoStore.remove(at: id)
+        }
         completion(nil)
     }
    ```
