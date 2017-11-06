@@ -186,7 +186,11 @@ A request to store data typically consists of a POST request with the data to be
    private var todoStore = [ToDo]()
    private let workerQueue = DispatchQueue(label: "worker")
    ```
-   3. Add a helper method at the end of the class, before the last closing brace
+   3. To be able to use `DispatchQueue` on Linux, add the following `import` statement to the start of the file:
+   ```swift
+   import Dispatch
+   ```
+   4. Add a helper method at the end of the class, before the last closing brace
    ```swift
     func execute(_ block: (() -> Void)) {
        workerQueue.sync {
