@@ -118,18 +118,7 @@ This test is still failing, even though the server is responding on localhost:80
 
 By default, web servers only serve content to web pages that were served by that web server. In order to allow other web pages, such as the ToDo Backend test page, to connect to the server, [Cross Origin Resource Sharing (CORS)](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) must be enabled.
 
-1. Open the Sources > Application > Application.swift file
-2. Add an import for the CORS library to the start of the file:
-   ```swift
-   import KituraCORS
-   ```
-3. Add the following into the start of the `postInit()` function:  
-   ```swift
-        let options = Options(allowedOrigin: .all)
-        let cors = CORS(options: options)
-        router.all("/*", middleware: cors)
-   ```
-4. Add the CORS library to the ToDoServer > Package.swift file
+1. Add the CORS library to the ToDoServer > Package.swift file
    Add the following to the end of the dependencies section of the Package.swift file:
    ```
       .package(url: "https://github.com/IBM-Swift/Kitura-CORS", .upToNextMinor(from: "2.0.0")),
@@ -139,13 +128,26 @@ By default, web servers only serve content to web pages that were served by that
       .target(name: "Application", dependencies: [ "Kitura", "KituraCORS", "Configuration", "CloudEnvironment", "Health" , "SwiftMetrics",
      ]),
    ```
-   In order for Xcode to pick up the new dependency, the Xcode project now needs to be regenerated.  
-5. Close Xcode, regenerate the Xcode project and reopen:
+   NOTE:- In order for Xcode to pick up the new dependency, the Xcode project now needs to be regenerated.  
+2. Close Xcode, regenerate the Xcode project and reopen:
    ```
    cd ~/ToDoBackend/ToDoServer  
    swift package generate-xcodeproj
    open ToDoServer.xcodeproj
    ```
+   
+3. Open the Sources > Application > Application.swift file
+4. Add an import for the CORS library to the start of the file:
+   ```swift
+   import KituraCORS
+   ```
+5. Add the following into the start of the `postInit()` function:  
+   ```swift
+        let options = Options(allowedOrigin: .all)
+        let cors = CORS(options: options)
+        router.all("/*", middleware: cors)
+   ```
+
 6. Re-run the server project in Xcode  
    1. Edit the scheme and select a Run Executable of “ToDoServer”  
    2. Run the project, then "Allow incoming network connections" if you are prompted.
