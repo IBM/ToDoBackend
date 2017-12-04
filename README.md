@@ -119,6 +119,7 @@ This test is still failing, even though the server is responding on localhost:80
 By default, web servers only serve content to web pages that were served by that web server. In order to allow other web pages, such as the ToDo Backend test page, to connect to the server, [Cross Origin Resource Sharing (CORS)](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) must be enabled.
 
 1. Add the CORS library to the ToDoServer > Package.swift file
+
    Add the following to the end of the dependencies section of the Package.swift file:
    ```
       .package(url: "https://github.com/IBM-Swift/Kitura-CORS", .upToNextMinor(from: "2.0.0")),
