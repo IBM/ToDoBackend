@@ -322,7 +322,7 @@ The failing test is trying to `PATCH` a specific ToDo item. A `PATCH` request up
     func updateHandler(id: Int, new: ToDo, completion: (ToDo?, RequestError?) -> Void ) -> Void {
         var current = todoStore[id]
         current.user = new.user ?? current.user
-        current.order = new.order ?? new.order
+        current.order = new.order ?? current.order
         current.title = new.title ?? current.title
         current.completed = new.completed ?? current.completed
         execute {
