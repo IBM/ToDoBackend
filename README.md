@@ -364,7 +364,9 @@ The failing test is trying to `DELETE` a specific ToDo item. This means register
     func deleteOneHandler(id: Int, completion: (RequestError?) -> Void ) {
         guard let idMatch = todoStore.first(where: { $0.id == id }),
             let idPosition = todoStore.index(of: idMatch) else { return }
-        todoStore.remove(at: idPosition)
+        execute {
+            todoStore.remove(at: idPosition)
+        }
         completion(nil)
     }
    ```
