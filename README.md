@@ -172,13 +172,17 @@ A request to store data typically consists of a POST request with the data to be
    4. Name the file `Models.swift`, change the "Targets" from "ToDoServerPackageDescription" to "Application", then click Create
    5. Add the following to the created file:
    ```swift
-   public struct ToDo : Codable {
+   public struct ToDo : Codable, Equatable {
        public var id: Int?
        public var user: String?
        public var title: String?
        public var order: Int?
        public var completed: Bool?
        public var url: String?
+       
+       public static func ==(lhs: ToDo, rhs: ToDo) -> Bool {
+           return (lhs.title == rhs.title) && (lhs.user == rhs.user) && (lhs.order == rhs.order) && (lhs.completed == rhs.completed) && (lhs.url == rhs.url) && (lhs.id == rhs.id)
+       }
    }
    ```
    This creates a struct for the ToDo items that uses Swift 4's `Codable` capabilities.
@@ -219,7 +223,7 @@ A request to store data typically consists of a POST request with the data to be
             todo.completed = false
         }
         let todo.id = nextId
-        todo.url = "http://localhost:8080/\(todo.id)"
+        todo.url = "http://localhost:8080/\(nextId)"
         nextId += 1
         execute {
             todoStore.append(todo)
@@ -323,7 +327,8 @@ The failing test is trying to `PATCH` a specific ToDo item. A `PATCH` request up
 2. Implement the `updateHandler` that receives an `id` and responds with the updated ToDo item:
    ```swift
     func updateHandler(id: Int, new: ToDo, completion: (ToDo?, RequestError?) -> Void ) {
-        guard let idMatch = todoStore.first(where: { $0.id == id }), let idPosition = todoStore.index(of: idMatch) else { return }
+        guard let idMatch = todoStore.first(where: { $0.id == id }),
+            let idPosition = todoStore.index(of: idMatch) else { return }
         var current = todoStore[idPosition]
         current.user = new.user ?? current.user
         current.order = new.order ?? current.order
@@ -357,7 +362,8 @@ The failing test is trying to `DELETE` a specific ToDo item. This means register
 2. Implement the `deleteOneHandler` that receives an `id` and removes the specified ToDo item:
    ```swift
     func deleteOneHandler(id: Int, completion: (RequestError?) -> Void ) {
-        guard let idMatch = todoStore.first(where: { $0.id == id }), let idPosition = todoStore.index(of: idMatch) else { return }
+        guard let idMatch = todoStore.first(where: { $0.id == id }),
+            let idPosition = todoStore.index(of: idMatch) else { return }
         todoStore.remove(at: idPosition)
         completion(nil)
     }
