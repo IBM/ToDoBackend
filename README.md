@@ -172,21 +172,27 @@ A request to store data typically consists of a POST request with the data to be
    4. Name the file `Models.swift`, change the "Targets" from "ToDoServerPackageDescription" to "Application", then click Create
    5. Add the following to the created file:
    ```swift
-   public struct ToDo : Codable {
+   public struct ToDo : Codable, Equatable {
+       public var id: Int?
        public var user: String?
        public var title: String?
        public var order: Int?
        public var completed: Bool?
        public var url: String?
+       
+       public static func ==(lhs: ToDo, rhs: ToDo) -> Bool {
+           return (lhs.title == rhs.title) && (lhs.user == rhs.user) && (lhs.order == rhs.order) && (lhs.completed == rhs.completed) && (lhs.url == rhs.url) && (lhs.id == rhs.id)
+       }
    }
    ```
    This creates a struct for the ToDo items that uses Swift 4's `Codable` capabilities.
 
 2. Create an in-memory data store for the ToDo items
    1. Open the Sources > Application > Application.swift file
-   2. Add a "todoStore" and a "serialQueue" into the App class. On the line below `let cloudEnv = CloudEnv()` add:  
+   2. Add a "todoStore",  "nextId" and a "workerQueue" into the App class. On the line below `let cloudEnv = CloudEnv()` add:
    ```swift
    private var todoStore = [ToDo]()
+   private var nextId :Int = 0
    private let workerQueue = DispatchQueue(label: "worker")
    ```
    3. To be able to use `DispatchQueue` on Linux, add the following `import` statement to the start of the file:
@@ -211,13 +217,14 @@ A request to store data typically consists of a POST request with the data to be
    2. Implement the storeHandler that receives a ToDo, and returns the stored ToDo    
    Add the following as a function in the App class:  
    ```swift
-    func storeHandler(todo: ToDo, completion: (ToDo?, RequestError?) -> Void ) -> Void {
+    func storeHandler(todo: ToDo, completion: (ToDo?, RequestError?) -> Void ) {
         var todo = todo
         if todo.completed == nil {
             todo.completed = false
         }
-        let id = todoStore.count
-        todo.url = "http://localhost:8080/\(id)"
+        let todo.id = nextId
+        todo.url = "http://localhost:8080/\(nextId)"
+        nextId += 1
         execute {
             todoStore.append(todo)
         }
@@ -247,7 +254,7 @@ In order to pass the next test, the ToDoServer needs to handle a DELETE on / res
    2. Implement the deleteAllHandler empties the todoStore  
    Add the following as a function in the App class:  
    ```swift
-    func deleteAllHandler(completion: (RequestError?) -> Void ) -> Void {
+    func deleteAllHandler(completion: (RequestError?) -> Void ) {
         execute {
             todoStore = [ToDo]()
         }
@@ -266,7 +273,7 @@ A request to load all of the stored data typically consists of a GET request wit
 2. Implement the getAllHandler that responds with all of the stored ToDo items as an array.      
    Add the following as a function in the App class:
    ```swift
-    func getAllHandler(completion: ([ToDo]?, RequestError?) -> Void ) -> Void {
+    func getAllHandler(completion: ([ToDo]?, RequestError?) -> Void ) {
         completion(todoStore, nil)
     }
    ```
@@ -294,8 +301,8 @@ Kitura's Codable Routing is able to automatically convert identifiers used in th
 
 2. Implement the `getOneHandler` that receives an `id` and responds with a ToDo item:
    ```swift        
-    func getOneHandler(id: Int, completion: (ToDo?, RequestError?) -> Void ) -> Void {
-        completion(todoStore[id], nil)
+    func getOneHandler(id: Int, completion: (ToDo?, RequestError?) -> Void ) {
+        completion(todoStore.first(where: {$0.id == id }), nil)
     }
    ```
 3.  Run the project and rerun the tests by reloading the test page in the browser. 
@@ -319,16 +326,18 @@ The failing test is trying to `PATCH` a specific ToDo item. A `PATCH` request up
    ```
 2. Implement the `updateHandler` that receives an `id` and responds with the updated ToDo item:
    ```swift
-    func updateHandler(id: Int, new: ToDo, completion: (ToDo?, RequestError?) -> Void ) -> Void {
-        var current = todoStore[id]
+    func updateHandler(id: Int, new: ToDo, completion: (ToDo?, RequestError?) -> Void ) {
+        guard let idMatch = todoStore.first(where: { $0.id == id }),
+            let idPosition = todoStore.index(of: idMatch) else { return }
+        var current = todoStore[idPosition]
         current.user = new.user ?? current.user
-        current.order = new.order ?? new.order
+        current.order = new.order ?? current.order
         current.title = new.title ?? current.title
         current.completed = new.completed ?? current.completed
         execute {
-            todoStore[id] = current
+            todoStore[idPosition] = current
         }
-        completion(todoStore[id], nil)
+        completion(todoStore[idPosition], nil)
     }
    ```
 3.  Run the project and rerun the tests by reloading the test page in the browser. 
@@ -352,9 +361,11 @@ The failing test is trying to `DELETE` a specific ToDo item. This means register
    ```
 2. Implement the `deleteOneHandler` that receives an `id` and removes the specified ToDo item:
    ```swift
-    func deleteOneHandler(id: Int, completion: (RequestError?) -> Void ) -> Void {
+    func deleteOneHandler(id: Int, completion: (RequestError?) -> Void ) {
+        guard let idMatch = todoStore.first(where: { $0.id == id }),
+            let idPosition = todoStore.index(of: idMatch) else { return }
         execute {
-            todoStore.remove(at: id)
+            todoStore.remove(at: idPosition)
         }
         completion(nil)
     }
@@ -368,13 +379,13 @@ All sixteen tests should now be passing!
 ## Next Step
 
 ### An iOS application for the ToDo Backend
-This tutorial has helped you build a ToDo Backend for the web tests and web client from the [Todo-Backend](https://www.todobackend.com) project, but one of the great values of Swift is end to end development between iOS and the server. Clone the [iOSSampleKituraKit](https://github.com/IBM-Swift/iOSSampleKituraKit) repository and open the `iOSKituraKitSample.xcodeproj` to see a iOS app client for the ToDo-Backend project.
+This tutorial has helped you build a ToDo Backend for the web tests and web client from the [Todo-Backend](https://www.todobackend.com) project, but one of the great values of Swift is end to end development between iOS and the server. Clone the [iOSSampleKituraKit](https://github.com/IBM-Swift/iOSSampleKituraKit) repository and open the `iOSKituraKitSample.xcworkspace` to see a iOS app client for the ToDo-Backend project.
 
    ```
    cd ~
    git clone https://github.com/IBM-Swift/iOSSampleKituraKit.git
    cd iOSSampleKituraKit/KituraiOS
-   open iOSSampleKituraKit.xcodeproj
+   open iOSKituraKitSample.xcworkspace/
    ```
 
 Run (⌘+R) the iOS application. You should be able to use the app to add, change and delete ToDo items!
