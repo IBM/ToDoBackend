@@ -222,7 +222,7 @@ A request to store data typically consists of a POST request with the data to be
         if todo.completed == nil {
             todo.completed = false
         }
-        let todo.id = nextId
+        todo.id = nextId
         todo.url = "http://localhost:8080/\(nextId)"
         nextId += 1
         execute {
