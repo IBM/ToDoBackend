@@ -44,8 +44,8 @@ The following steps allow you to run the tests:
    open index.html
    ```
    This should open your browser with the test page open.  
-2. Set a "test target root" of http://localhost:8080  
-3. Click "run tests"  
+2. Set a `test target root` of http://localhost:8080  
+3. Click `run tests`  
 
 The first error reported should be as follows:  
 :x: `the api root responds to a GET (i.e. the server is up and accessible, CORS headers are set up)`
@@ -90,8 +90,8 @@ Implementing a compliant ToDo Backend is an incremental task, with the aim at ea
 
 1. Run the server project in Xcode
     1. Change the selected target from "ToDoServer-Package" to the "TodoServer" executable.
-    2. Press the Run button or use the ⌘+R key shortcut.
-    3. Select "Allow incoming network connections" if you are prompted.
+    2. Press the `Run` button or use the `⌘+R` key shortcut.
+    3. Select `Allow incoming network connections` if you are prompted.
 
 2. Check that some of the standard Kitura URLs are running:
     * Kitura Monitoring: http://localhost:8080/swiftmetrics-dash/
@@ -114,11 +114,11 @@ server isn't doing the CORS things it needs to do.
 ```
 
 ### 2. Add Cross Origin Resource Sharing (CORS) Support
-This test is still failing, even though the server is responding on localhost:8080. This is because Cross Origin Resource Sharing (CORS) is not enabled.
+This test is still failing, even though the server is responding on `localhost:8080`. This is because Cross Origin Resource Sharing (CORS) is not enabled.
 
 By default, web servers only serve content to web pages that were served by that web server. In order to allow other web pages, such as the ToDo Backend test page, to connect to the server, [Cross Origin Resource Sharing (CORS)](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) must be enabled.
 
-1. Add the CORS library to the ToDoServer > Package.swift file
+1. Add the CORS library to the `ToDoServer` > `Package.swift` file
 
    Add the following to the end of the dependencies section of the Package.swift file:
    ```
@@ -137,7 +137,7 @@ By default, web servers only serve content to web pages that were served by that
    open ToDoServer.xcodeproj
    ```
    
-3. Open the Sources > Application > Application.swift file
+3. Open the `Sources` > `Application` > `Application.swift` file
 4. Add an import for the CORS library to the start of the file:
    ```swift
    import KituraCORS
@@ -151,7 +151,7 @@ By default, web servers only serve content to web pages that were served by that
 
 6. Re-run the server project in Xcode  
    1. Edit the scheme and select a Run Executable of “ToDoServer”  
-   2. Run the project, then "Allow incoming network connections" if you are prompted.
+   2. Run the project, then `Allow incoming network connections` if you are prompted.
 
 7. Rerun the tests by reloading the test page in the browser. 
 
@@ -161,16 +161,16 @@ The first test should now be passing but the second test is failing:
 In order to fix this, we need to implement a `POST` request that saves a todo item.
 
 ### 3. Add Support for handling a POST request on '/'
-REST APIs typically consist of a HTTP request using a verb such as POST, PUT, GET or DELETE along with a URL and an optional data payload. The server then handles the request and responds with an optional data payload.
+REST APIs typically consist of a HTTP request using a verb such as `POST`, `PUT`, `GET` or `DELETE` along with a URL and an optional data payload. The server then handles the request and responds with an optional data payload.
 
-A request to store data typically consists of a POST request with the data to be stored, which the server then handles and responds with a copy of the data that has just been stored. This means we need to define a ToDo type, register a  handler for POST requests on "/", and implement the handler to store the data.
+A request to store data typically consists of a POST request with the data to be stored, which the server then handles and responds with a copy of the data that has just been stored. This means we need to define a ToDo type, register a  handler for POST requests on `/`, and implement the handler to store the data.
 
 1. Define a data type for the ToDo items:
    1. Select the Application folder in the left hand explorer in Xcode
-   2. Select File > New > File... from the pull down menu
-   3. Select Swift File and click Next
-   4. Name the file `Models.swift`, change the "Targets" from "ToDoServerPackageDescription" to "Application", then click Create
-   5. Add the following to the created file:
+   2. Select `File` > `New` > `File...` from the pull down menu
+   3. Select Swift File and click `Next`
+   4. Name the file `Models.swift`, change the `Targets` from `ToDoServerPackageDescription` to `Application`, then click `Create`
+   5. Add the following to the created file:
    ```swift
    public struct ToDo : Codable, Equatable {
        public var id: Int?
@@ -188,8 +188,8 @@ A request to store data typically consists of a POST request with the data to be
    This creates a struct for the ToDo items that uses Swift 4's `Codable` capabilities.
 
 2. Create an in-memory data store for the ToDo items
-   1. Open the Sources > Application > Application.swift file
-   2. Add a "todoStore",  "nextId" and a "workerQueue" into the App class. On the line below `let cloudEnv = CloudEnv()` add:
+   1. Open the `Sources` > `Application` > `Application.swift` file
+   2. Add a `todoStore`,  `nextId` and a `workerQueue` into the App class. On the line below `let cloudEnv = CloudEnv()` add:
    ```swift
    private var todoStore = [ToDo]()
    private var nextId :Int = 0
@@ -231,7 +231,7 @@ A request to store data typically consists of a POST request with the data to be
         completion(todo, nil)
     }
    ``` 
-   This expects to receive a ToDo struct from the request, sets `completed` to false if it is nil and adds a `url` value that informs the client how to retrieve this todo item in the future.  
+   This expects to receive a ToDo struct from the request, sets `completed` to false if it is `nil` and adds a `url` value that informs the client how to retrieve this todo item in the future.  
    The handler then returns the updated ToDo item to the client.
 
 4.  Run the project and rerun the tests by reloading the test page in the browser. 
@@ -239,19 +239,19 @@ A request to store data typically consists of a POST request with the data to be
 The first three tests should now pass and the fourth fails:  
 :X: `after a DELETE the api root responds to a GET with a JSON representation of an empty array`
 
-In order to fix this, a handler for DELETE requests and a subsequent GET handler to return the stored ToDo items.
+In order to fix this, a handler for `DELETE` requests and a subsequent `GET` handler to return the stored ToDo items.
 
 ### 4. Add Support for handling a DELETE request on '/'
 A request to delete data typically consists of a DELETE request. If the request is to delete a specific item, a URL encoded identifier is normally provided (eg. '/1' for the item with ID 1). If no identifier is provided, it is a request to delete all of the items.
 
-In order to pass the next test, the ToDoServer needs to handle a DELETE on / resulting in removing all stored ToDo items.
+In order to pass the next test, the ToDoServer needs to handle a `DELETE` on `/` resulting in removing all stored ToDo items.
 
 1. Register a handler for a `DELETE` request on `/` that empties the ToDo item data
    1. Add the following into the `postInit()` function:
    ```swift
    router.delete("/", handler: deleteAllHandler)
    ```
-   2. Implement the deleteAllHandler empties the todoStore  
+   2. Implement the `deleteAllHandler` empties the todoStore  
    Add the following as a function in the App class:  
    ```swift
     func deleteAllHandler(completion: (RequestError?) -> Void ) {
@@ -263,14 +263,14 @@ In order to pass the next test, the ToDoServer needs to handle a DELETE on / res
    ```
 
 ### 5. Add Support for handling a GET request on '/'
-A request to load all of the stored data typically consists of a GET request with no data, which the server then handles and responds with an array of the data that has just been stored.
+A request to load all of the stored data typically consists of a `GET` request with no data, which the server then handles and responds with an array of the data that has just been stored.
 
 1. Register a handler for a `GET` request on `/` that loads the data  
    Add the following into the `postInit()` function:  
    ```swift
 	router.get("/", handler: getAllHandler)
    ```
-2. Implement the getAllHandler that responds with all of the stored ToDo items as an array.      
+2. Implement the `getAllHandler` that responds with all of the stored ToDo items as an array.      
    Add the following as a function in the App class:
    ```swift
     func getAllHandler(completion: ([ToDo]?, RequestError?) -> Void ) {
@@ -289,10 +289,10 @@ FAILED
 404: Not Found (Cannot GET /0.)
 ```
 
-### 6. Add Support for handling a GET request on '/:id'
-The failing test is trying to load a specific ToDo item by making a GET request with the ID of the ToDo item that it wishes to retrieve, which is based on the ID in the `url` field of the ToDo item set when the item was stored by the earlier POST request. In the test above the reqest was for `GET /0` - a request for id 0.
+### 6. Add Support for handling a `GET` request on '/:id'
+The failing test is trying to load a specific ToDo item by making a `GET` request with the ID of the ToDo item that it wishes to retrieve, which is based on the ID in the `url` field of the ToDo item set when the item was stored by the earlier `POST` request. In the test above the reqest was for `GET /0` - a request for id 0.
 
-Kitura's Codable Routing is able to automatically convert identifiers used in the GET request to a parameter that is passed to the registered handler. As a result, the handler is registered against the "/" route, with the handler taking an extra parameter.
+Kitura's Codable Routing is able to automatically convert identifiers used in the `GET` request to a parameter that is passed to the registered handler. As a result, the handler is registered against the `/` route, with the handler taking an extra parameter.
 
 1. Register a handler for a `GET` request on `/`:
    ```swift
@@ -317,8 +317,8 @@ FAILED
 404: Not Found (Cannot PATCH /0.)
 ```
 
-### 7. Add Support for handling a PATCH request on '/:id'
-The failing test is trying to `PATCH` a specific ToDo item. A `PATCH` request updates an existing item by updating any fields sent as part of the PATCH request. This means that a field by field update needs to be done.
+### 7. Add Support for handling a `PATCH` request on `/:id`
+The failing test is trying to `PATCH` a specific ToDo item. A `PATCH` request updates an existing item by updating any fields sent as part of the `PATCH` request. This means that a field by field update needs to be done.
 
 1.  Register a handler for a `PATCH` request on `/`:
    ```swift
@@ -353,9 +353,9 @@ FAILED
 ```
 
 ### 8. Add Support for handling a DELETE request on '/:id'
-The failing test is trying to `DELETE` a specific ToDo item. This means registering an additonal handler for `DELETE` that this time accepts an ID as a parameter.
+The failing test is trying to `DELETE` a specific ToDo item. This means registering an additional handler for `DELETE` that this time accepts an ID as a parameter.
 
-1. Register a handler for a `DELETE` request on /:
+1. Register a handler for a `DELETE` request on `/`:
    ```swift
    router.delete("/", handler: deleteOneHandler)
    ```
@@ -388,4 +388,4 @@ This tutorial has helped you build a ToDo Backend for the web tests and web clie
    open iOSKituraKitSample.xcworkspace/
    ```
 
-Run (⌘+R) the iOS application. You should be able to use the app to add, change and delete ToDo items!
+Run (`⌘+R`) the iOS application. You should be able to use the app to add, change and delete ToDo items!
