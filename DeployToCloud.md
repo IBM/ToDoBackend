@@ -2,7 +2,7 @@
 
 ### Pre-Requisites:
 **Create a free IBM Cloud Account**  
-Go to the following URL, fill out the form and press "Create Account":  
+Go to the following URL, fill out the form and press `Create Account`:  
 https://console.bluemix.net/registration?cm_sp=dw-bluemix-_-swift-_-devcenter
 
 **Install the IBM Developer Tools**  
@@ -12,7 +12,7 @@ kitura idt
 ```
 
 **Obtain a GitHub ID**  
-Go to the following URL, enter Username, Email and Password and press "Sign up for GitHub":  
+Go to the following URL, enter Username, Email and Password and press `Sign up for GitHub`:  
 https://github.com/
  
 **Install the Git CLI**  
@@ -31,7 +31,7 @@ Before deploying to the cloud, it is useful to be able to build and test the Kit
    ```
    kitura build  
    ```
-   This builds your Kitura application using a Linux Ubuntu 14.04 Docker container locally on your laptop, ensuring that the application will compile successfull when deployed to the cloud.
+   This builds your Kitura application using a Linux Ubuntu 14.04 Docker container locally on your laptop, ensuring that the application will compile successful when deployed to the cloud.
 3. Run you Kitura application on Linux
    ```
    kitura run
@@ -73,15 +73,15 @@ There are two main methods to deploying your application to IBM Cloud:
 
 ### Option 2: IBM Cloud DevOps Pipelines
 
-In order to use the IBM Cloud DevOps pipelines to build, test and deploy your project, you need to host your project in a Git repositiory that is visible to IBM Cloud. The easiest way to do this is using GitHub.
+In order to use the IBM Cloud DevOps pipelines to build, test and deploy your project, you need to host your project in a Git repository that is visible to IBM Cloud. The easiest way to do this is using GitHub.
 
 #### Create a GitHub project
 1. Go to your GitHub account  
-   http://github.com
+   https://github.com
 2. Go to your profile by clicking on your avatar in the top right hand corner.
-3. Select the "Repositorites" tab 
-4. Select the green "New" button
-5. Give your repository a name and press "Create repository"  
+3. Select the `Repositories` tab 
+4. Select the green `New` button
+5. Give your repository a name and press `Create repository`  
 **Note:** Keep this page for use later
 
 
@@ -95,10 +95,10 @@ cd ~/ToDoBackend/
 `git init`
 3. Add all your files to the project  
 `git add -A`
-4. Check those file in by as a "commit"  
+4. Check those file in by as a `commit` 
 `git commit -m "Initial commit"` 
 6. Push the commit to GitHub  
-Use the two lines under "…or push an existing repository from the command line" from the page dispalyed when you created your GitHub page.
+Use the two lines under `…or push an existing repository from the command line` from the page displayed when you created your GitHub page.
 
 7. Reload the GitHub project page
 
