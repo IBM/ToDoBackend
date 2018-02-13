@@ -122,7 +122,7 @@ By default, web servers only serve content to web pages that were served by that
 
    Add the following to the end of the dependencies section of the Package.swift file:
    ```
-      .package(url: "https://github.com/IBM-Swift/Kitura-CORS", .upToNextMinor(from: "2.0.0")),
+      .package(url: "https://github.com/IBM-Swift/Kitura-CORS", .upToNextMinor(from: "2.1.0")),
    ```
    and update the dependencies line for the Application target to the following:
    ```
