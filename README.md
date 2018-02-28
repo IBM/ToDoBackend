@@ -126,7 +126,7 @@ By default, web servers only serve content to web pages that were served by that
    ```
    and update the dependencies line for the Application target to the following:
    ```
-      .target(name: "Application", dependencies: [ "Kitura", "KituraCORS", "Configuration", "CloudEnvironment", "Health" , "SwiftMetrics",
+      .target(name: "Application", dependencies: [ "Kitura", "KituraCORS", "CloudEnvironment", "Health" , "SwiftMetrics",
      ]),
    ```
    NOTE:- In order for Xcode to pick up the new dependency, the Xcode project now needs to be regenerated.  
