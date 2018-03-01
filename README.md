@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-<a href= "http://swift-at-ibm-slack.mybluemix.net/"> 
-    <img src="http://swift-at-ibm-slack.mybluemix.net/badge.svg"  alt="Slack"> 
+<a href= "http://kitura-slack.mybluemix.net/">
+    <img src="http://kitura-slack.mybluemix.net/badge.svg"  alt="Slack"> 
 </a>
 </p>
 
