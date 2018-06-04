@@ -85,7 +85,7 @@ unzip -d ToDoServer <filename>.zip  # <filename>.zip was downloaded from IBM Clo
 cp -R ToDoServer ~/ToDoBackend/ToDoServer
 ```
 
-Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](ToDoServer.html).
+Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
 
 ### Option 2: Create your Kitura application at the command-line
 
@@ -106,7 +106,7 @@ kitura init
 
 This creates a fully working Kitura project that provides monitoring and metrics which can then be extended with your application logic.
 
-Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](ToDoServer.html).
+Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
 
 ### Option 3: Use the Kitura macOS app
 
@@ -123,4 +123,4 @@ The Kitura macOS app provides an easy point-and-click way to generate a new Kitu
 
 The Kitura app will create a new Kitura project for you, ready to deploy to the cloud.
 
-Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](ToDoServer.html).
+Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
