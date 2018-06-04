@@ -49,9 +49,7 @@ Implementing a compliant ToDo Backend is an incremental task, with the aim being
     ```
 
 2. Run your Kitura server in Xcode:
-    1. Change the selected target from "ToDoServer-Package" to the "TodoServer" executable.
-    2. Press the `Run` button or use the `⌘+R` key shortcut.
-    3. Select "Allow incoming network connections" if you are prompted.
+    1) Change the selected target from "ToDoServer-Package" to the "TodoServer" executable. 2) Press the `Run` button or use the `⌘+R` key shortcut. 3) Select "Allow incoming network connections" if you are prompted.
 
 3. Check that some of the standard Kitura URLs are running:
     * Kitura splash screen: [http://localhost:8080/](http://localhost:8080/)
@@ -93,12 +91,11 @@ Now we need to enable OpenAPI in our Kitura server.
    ```
 3. Add the following code into the end of the `postInit()` function after the call to `initializeHealthRoutes()`:  
    ```swift
-        KituraOpenAPI.addEndpoints(to: router)
+   KituraOpenAPI.addEndpoints(to: router)
    ```
 
 4. Re-run the server project in Xcode  
-    1. Edit the scheme again and select a Run Executable of "ToDoServer".
-    2. Run the project, then "Allow incoming network connections" if you are prompted.
+    1) Edit the scheme again and select a Run Executable of "ToDoServer". 2) Run the project, then "Allow incoming network connections" if you are prompted.
 
 Now, you can open [http://localhost:8080/openapi](http://localhost:8080/openapi) and view the live OpenAPI specification of your Kitura application in JSON format.
 
@@ -116,7 +113,7 @@ You should see a Response Body in JSON format, like:
 
 and a Response Code of 200.
 
-Congratulations, you have added OpenAPI support to your Kitura application and used SwaggerUI to exercise a REST API!
+Congratulations, you have added OpenAPI support to your Kitura application and used SwaggerUI to query a REST API!
 
 ### 3. Add Cross Origin Resource Sharing (CORS) Support
 
@@ -172,14 +169,13 @@ Now we need to enable CORS in our Kitura server.
    ```
 3. Add the following code at the start of the `postInit()` function:  
    ```swift
-        let options = Options(allowedOrigin: .all)
-        let cors = CORS(options: options)
-        router.all("/*", middleware: cors)
+   let options = Options(allowedOrigin: .all)
+   let cors = CORS(options: options)
+   router.all("/*", middleware: cors)
    ```
 
 4. Re-run the server project in Xcode  
-    1. Edit the scheme again and select a Run Executable of "ToDoServer"
-    2. Run the project, then "Allow incoming network connections" if you are prompted.
+    1) Edit the scheme again and select a Run Executable of "ToDoServer". 2) Run the project, then "Allow incoming network connections" if you are prompted.
 
 5. Re-run the tests by reloading the test page in your web browser. 
 
@@ -187,13 +183,13 @@ The first test should now be passing!  But the second test is failing:
 
 :x: `the api root responds to a POST with the todo which was posted to it`
 
-In order to fix this, we need to implement a `POST` request that saves a todo item.
+In order to fix this, we need to implement a `POST` request that saves a ToDo item.
 
 ### 4. Add Support for handling a POST request on `/todos`
 
-REST APIs typically consist of a HTTP request using a verb such as `POST`, `PUT`, `GET` or `DELETE` along with a URL and an optional data payload. The server then handles the request and responds with an optional data payload.
+REST APIs typically consist of an HTTP request using a verb such as `POST`, `PUT`, `GET` or `DELETE` along with a URL and an optional data payload. The server then handles the request and responds with an optional data payload.
 
-A request to store data typically consists of a POST request with the data to be stored, which the server then handles and responds with a copy of the data that has just been stored. This means we need to define a ToDo type, register a  handler for POST requests on `/todos`, and implement the handler to store the data.
+A request to store data typically consists of a POST request with the data to be stored, which the server then handles and responds with a copy of the data that has just been stored. This means we need to define a `ToDo` type, register a  handler for POST requests on `/todos`, and implement the handler to store the data.
 
 1. Define a data type for the ToDo items:
    1. Select the Application folder in the left hand explorer in Xcode
@@ -239,12 +235,12 @@ A request to store data typically consists of a POST request with the data to be
    ```
    This will be used to make sure that access to the todoStore is serialized, so the app does not crash on concurrent requests.
 
-3. Register a handler for a `POST` request on `/todos` that stores the ToDo item data  
+3. Register a handler for a `POST` request on `/todos` that stores the ToDo item data.
    1. Add the following into the `postInit()` function:
    ```swift
    router.post("/todos", handler: storeHandler)
    ```
-   2. Implement the `storeHandler()` that receives a ToDo, and returns the stored ToDo    
+   2. Implement the `storeHandler()` that receives a ToDo, and returns the stored ToDo.
    Add the following as a function in the App class:  
    ```swift
     func storeHandler(todo: ToDo, completion: (ToDo?, RequestError?) -> Void ) {
@@ -261,7 +257,7 @@ A request to store data typically consists of a POST request with the data to be
         completion(todo, nil)
     }
    ``` 
-   This expects to receive a ToDo struct from the request, sets `completed` to false if it is `nil` and adds a `url` value that informs the client how to retrieve this todo item in the future.  
+   This expects to receive a ToDo struct from the request, sets `completed` to false if it is `nil` and adds a `url` value that informs the client how to retrieve this ToDo item in the future.  
    The handler then returns the updated ToDo item to the client.
 
 4.  Run the project and rerun the tests by reloading the test page in the browser. 
@@ -285,7 +281,7 @@ Click "Try it out!" and view the response body below.  You should see a JSON obj
 }
 ```
 
-Congratulations, you have successfully added a ToDo item to the store!
+Congratulations, you have successfully added a ToDo item to the store using SwaggerUI!
 
 Going back to the testsuite webpage, the next failing test says this:
   
@@ -438,7 +434,7 @@ You should see a response code of 200 with a response body of:
 
 ### 9. Add Support for handling a DELETE request on `/todos/:id`
 
-The failing test is trying to `DELETE` a specific ToDo item. To fix this you an additional route handler for `DELETE` that this time accepts an ID as a parameter.
+The failing test is trying to `DELETE` a specific ToDo item. To fix this you need an additional route handler for `DELETE` that this time accepts an ID as a parameter.
 
 1. Register a handler for a `DELETE` request on `/todos`:
    ```swift
