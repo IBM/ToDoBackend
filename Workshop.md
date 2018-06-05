@@ -467,7 +467,7 @@ All sixteen tests should now be passing!
 Now try visiting [https://todobackend.com/client/](https://todobackend.com/client/) in your browser to view the ToDo-Backend web client. Enter an API root of `http://localhost:8080/` and use the website to interact with your REST API. You can add, remove and update ToDo items as you wish.
 
 ### An iOS application for the ToDo-Backend
-This tutorial has helped you build a ToDo-Backend for the web tests and web client from the [Todo-Backend](https://www.todobackend.com) project, but one of the great values of Swift is end to end development between iOS and the server. Clone the [iOSSampleKituraKit](https://github.com/IBM-Swift/iOSSampleKituraKit) repository and open the `iOSKituraKitSample.xcworkspace` to see a iOS app client for the ToDo-Backend project.
+This tutorial has helped you build a ToDo-Backend for the web tests and web client from the [Todo-Backend](https://www.todobackend.com) project, but one of the great values of Swift is end to end development between iOS and the server. Clone the [iOSSampleKituraKit](https://github.com/IBM-Swift/iOSSampleKituraKit) repository and open the `iOSKituraKitSample.xcworkspace` to see an iOS app client for the ToDo-Backend project.
 
    ```
    cd ~

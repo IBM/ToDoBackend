@@ -76,13 +76,20 @@ The app details view is now displayed where you could configure your app, add se
 
 1. Click the "Download Code" button on the top right to download your Kitura starter kit application in a zip file.
 
-In the terminal, unzip your app and copy it to the workshop location:
+Your browser may automatically unzip the file for you. If it does not, unzip your app and copy it to the workshop location as follows:
 
 ```
 cd ~/Downloads
 mkdir ToDoServer
 unzip -d ToDoServer <filename>.zip  # <filename>.zip was downloaded from IBM Cloud
 cp -R ToDoServer ~/ToDoBackend/ToDoServer
+```
+
+If it is already unzipped, just copy the files to the workshop location:
+
+```
+cd ~/Downloads
+cp -R <foldername> ~/ToDoBackend/ToDoServer
 ```
 
 Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
