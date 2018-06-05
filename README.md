@@ -10,382 +10,131 @@
 </a>
 </p>
 
-This tutorial teaches how to create a Kitura backend for the [Todo-Backend](https://www.todobackend.com) project, which provides tests and a web client for a "To Do List" application. 
+In this self-paced tutorial you will build a Kitura 2 application from scratch and create a REST API inside the application.
 
-## Pre-Requisites:
-**Note:** This workshop has been developed for Swift 4, Xcode 9.x and Kitura 2.x.
+The application you'll create is a "ToDo list" application, as described by the [Todo-Backend](http://todobackend.com/) project.
 
-1. Install the [Kitura CLI](https://github.com/ibm-swift/kitura-cli):  
-   1. Configure the Kitura homebrew tap  
-   `brew tap ibm-swift/kitura`  
-   2. Install the Kiura CLI from homebrew  
-   `brew install kitura`
+You'll learn about server-side Swift, the Kitura framework, REST APIs, and OpenAPI.
 
-2. Clone this project from GitHub to your machine (don't use the Download ZIP option):
-   ```
-   cd ~
-   git clone http://github.com/IBM/ToDoBackend
-   ```
+At the end you should have a fully functioning application which passes a provided verification testsuite.
 
-3. Clone the ToDo Backend tests from GitHub to your machine (don't use the Download ZIP option): 
-   ```
-   cd ~
-   git clone http://github.com/TodoBackend/todo-backend-js-spec
-   ```
+## Prerequisites
 
-## Getting started
-In order to implement a To Do Backend, a server is required that provides support for storing, retrieving, deleting and updating "to do" items. The To Do Backend project doesn't provide a specification as such for how the server must respond, rather it provides a set of tests which the server must pass. The "todo-backend-js-spec" project provides those tests.
+Before getting started, make sure you have the following prerequisites installed on your system.
 
-### 1. Run the ToDo Backend Tests:
-The following steps allow you to run the tests:
-1. Open the tests in a web browser:
-   ```
-   cd ~/todo-backend-js-spec
-   open index.html
-   ```
-   This should open your browser with the test page open.  
-2. Set a `test target root` of http://localhost:8080  
-3. Click `run tests`  
+1. macOS
+2. Xcode 9.3 or later. You can install Xcode from the Mac App Store.
+3. Command line tools for Xcode. You can check if these are installed (and install them if necessary) by running `xcode-select --install` in a terminal window.
 
-The first error reported should be as follows:  
-:x: `the api root responds to a GET (i.e. the server is up and accessible, CORS headers are set up)`
-```
-AssertionError: expected promise to be fulfilled but it was rejected with [Error: 
+## Setting up
 
-GET http://localhost:8080
-FAILED
-
-The browser failed entirely when make an AJAX request.
-```
-
-This shows that the tests made a `GET` request to `http://localhost.com:8080`, but that it failed with no response, which is expected as there is no server.
-
-In the instructions below, reloading the page will allow you to re-run the ToDo Backend tests.
-
-
-## Building a Kitura Backend
-Implementing a compliant ToDo Backend is an incremental task, with the aim at each step to pass more tests. The first step is to create a Kitura server to response on requests.
-
-### 1. Initialize a Kitura Server Project
-1. Create a directory for the server project 
-   ```
-   cd ~/ToDoBackend
-   mkdir ToDoServer
-   cd ToDoServer
-   ```  
-
-2. Create a Kitura starter project  
-   ```
-   kitura init
-   ```  
-   The Kitura CLI will now create and build an starter Kitura application for you. This includes adding best-practice implementations of capabilities such as configuration, health checking and monitoring to the application for you.
-
-   More information about the [project structure](http://kitura.io/en/starter/generator/project_layout_reference.html) is available on kitura.io. 
-
-3. Open the ToDoServer project in Xcode  
-   ```swift
-   cd ~/ToDoBackend/ToDoServer  
-   open ToDoServer.xcodeproj
-   ```
-
-1. Run the server project in Xcode
-    1. Change the selected target from "ToDoServer-Package" to the "TodoServer" executable.
-    2. Press the `Run` button or use the `⌘+R` key shortcut.
-    3. Select `Allow incoming network connections` if you are prompted.
-
-2. Check that some of the standard Kitura URLs are running:
-    * Kitura Monitoring: http://localhost:8080/swiftmetrics-dash/
-    * Kitura Health check: http://localhost:8080/health
-    * Kitura splash screen: http://localhost:8080/
-
-6. Rerun the tests by reloading the test page in the browser.  
-
-The first test should fail with the following:  
-:x: `the api root responds to a GET (i.e. the server is up and accessible, CORS headers are set up)`
-```
-AssertionError: expected promise to be fulfilled but it was rejected with [Error: 
-
-GET http://localhost:8080/
-FAILED
-
-The browser failed entirely when make an AJAX request.
-Either there is a network issue in reaching the url, or the
-server isn't doing the CORS things it needs to do.
-```
-
-### 2. Add Cross Origin Resource Sharing (CORS) Support
-This test is still failing, even though the server is responding on `localhost:8080`. This is because Cross Origin Resource Sharing (CORS) is not enabled.
-
-By default, web servers only serve content to web pages that were served by that web server. In order to allow other web pages, such as the ToDo Backend test page, to connect to the server, [Cross Origin Resource Sharing (CORS)](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) must be enabled.
-
-1. Add the CORS library to the `ToDoServer` > `Package.swift` file
-
-   Add the following to the end of the dependencies section of the Package.swift file:
-   ```
-      .package(url: "https://github.com/IBM-Swift/Kitura-CORS", .upToNextMinor(from: "2.1.0")),
-   ```
-   and update the dependencies line for the Application target to the following:
-   ```
-      .target(name: "Application", dependencies: [ "Kitura", "KituraCORS", "Configuration", "CloudEnvironment", "Health" , "SwiftMetrics",
-     ]),
-   ```
-   NOTE:- In order for Xcode to pick up the new dependency, the Xcode project now needs to be regenerated.  
-2. Close Xcode, regenerate the Xcode project and reopen:
-   ```
-   cd ~/ToDoBackend/ToDoServer  
-   swift package generate-xcodeproj
-   open ToDoServer.xcodeproj
-   ```
-   
-3. Open the `Sources` > `Application` > `Application.swift` file
-4. Add an import for the CORS library to the start of the file:
-   ```swift
-   import KituraCORS
-   ```
-5. Add the following into the start of the `postInit()` function:  
-   ```swift
-        let options = Options(allowedOrigin: .all)
-        let cors = CORS(options: options)
-        router.all("/*", middleware: cors)
-   ```
-
-6. Re-run the server project in Xcode  
-   1. Edit the scheme and select a Run Executable of “ToDoServer”  
-   2. Run the project, then `Allow incoming network connections` if you are prompted.
-
-7. Rerun the tests by reloading the test page in the browser. 
-
-The first test should now be passing but the second test is failing:  
-:x: `the api root responds to a POST with the todo which was posted to it`
-
-In order to fix this, we need to implement a `POST` request that saves a todo item.
-
-### 3. Add Support for handling a POST request on '/'
-REST APIs typically consist of a HTTP request using a verb such as `POST`, `PUT`, `GET` or `DELETE` along with a URL and an optional data payload. The server then handles the request and responds with an optional data payload.
-
-A request to store data typically consists of a POST request with the data to be stored, which the server then handles and responds with a copy of the data that has just been stored. This means we need to define a ToDo type, register a  handler for POST requests on `/`, and implement the handler to store the data.
-
-1. Define a data type for the ToDo items:
-   1. Select the Application folder in the left hand explorer in Xcode
-   2. Select `File` > `New` > `File...` from the pull down menu
-   3. Select Swift File and click `Next`
-   4. Name the file `Models.swift`, change the `Targets` from `ToDoServerPackageDescription` to `Application`, then click `Create`
-   5. Add the following to the created file:
-   ```swift
-   public struct ToDo : Codable, Equatable {
-       public var id: Int?
-       public var user: String?
-       public var title: String?
-       public var order: Int?
-       public var completed: Bool?
-       public var url: String?
-       
-       public static func ==(lhs: ToDo, rhs: ToDo) -> Bool {
-           return (lhs.title == rhs.title) && (lhs.user == rhs.user) && (lhs.order == rhs.order) && (lhs.completed == rhs.completed) && (lhs.url == rhs.url) && (lhs.id == rhs.id)
-       }
-   }
-   ```
-   This creates a struct for the ToDo items that uses Swift 4's `Codable` capabilities.
-
-2. Create an in-memory data store for the ToDo items
-   1. Open the `Sources` > `Application` > `Application.swift` file
-   2. Add a `todoStore`,  `nextId` and a `workerQueue` into the App class. On the line below `let cloudEnv = CloudEnv()` add:
-   ```swift
-   private var todoStore = [ToDo]()
-   private var nextId :Int = 0
-   private let workerQueue = DispatchQueue(label: "worker")
-   ```
-   3. To be able to use `DispatchQueue` on Linux, add the following `import` statement to the start of the file:
-   ```swift
-   import Dispatch
-   ```
-   4. Add a helper method at the end of the class, before the last closing brace
-   ```swift
-    func execute(_ block: (() -> Void)) {
-       workerQueue.sync {
-           block()
-       }
-    }
-   ```
-   This will be used to make sure that access to shared resources is serialized so the app does not crash on concurrent requests.
-
-3. Register a handler for a `POST` request on `/` that stores the ToDo item data  
-   1. Add the following into the `postInit()` function:
-   ```swift
-   router.post("/", handler: storeHandler)
-   ```
-   2. Implement the storeHandler that receives a ToDo, and returns the stored ToDo    
-   Add the following as a function in the App class:  
-   ```swift
-    func storeHandler(todo: ToDo, completion: (ToDo?, RequestError?) -> Void ) {
-        var todo = todo
-        if todo.completed == nil {
-            todo.completed = false
-        }
-        todo.id = nextId
-        todo.url = "http://localhost:8080/\(nextId)"
-        nextId += 1
-        execute {
-            todoStore.append(todo)
-        }
-        completion(todo, nil)
-    }
-   ``` 
-   This expects to receive a ToDo struct from the request, sets `completed` to false if it is `nil` and adds a `url` value that informs the client how to retrieve this todo item in the future.  
-   The handler then returns the updated ToDo item to the client.
-
-4.  Run the project and rerun the tests by reloading the test page in the browser. 
-
-The first three tests should now pass and the fourth fails:  
-:X: `after a DELETE the api root responds to a GET with a JSON representation of an empty array`
-
-In order to fix this, a handler for `DELETE` requests and a subsequent `GET` handler to return the stored ToDo items.
-
-### 4. Add Support for handling a DELETE request on '/'
-A request to delete data typically consists of a DELETE request. If the request is to delete a specific item, a URL encoded identifier is normally provided (eg. '/1' for the item with ID 1). If no identifier is provided, it is a request to delete all of the items.
-
-In order to pass the next test, the ToDoServer needs to handle a `DELETE` on `/` resulting in removing all stored ToDo items.
-
-1. Register a handler for a `DELETE` request on `/` that empties the ToDo item data
-   1. Add the following into the `postInit()` function:
-   ```swift
-   router.delete("/", handler: deleteAllHandler)
-   ```
-   2. Implement the `deleteAllHandler` empties the todoStore  
-   Add the following as a function in the App class:  
-   ```swift
-    func deleteAllHandler(completion: (RequestError?) -> Void ) {
-        execute {
-            todoStore = [ToDo]()
-        }
-        completion(nil)
-    }
-   ```
-
-### 5. Add Support for handling a GET request on '/'
-A request to load all of the stored data typically consists of a `GET` request with no data, which the server then handles and responds with an array of the data that has just been stored.
-
-1. Register a handler for a `GET` request on `/` that loads the data  
-   Add the following into the `postInit()` function:  
-   ```swift
-	router.get("/", handler: getAllHandler)
-   ```
-2. Implement the `getAllHandler` that responds with all of the stored ToDo items as an array.      
-   Add the following as a function in the App class:
-   ```swift
-    func getAllHandler(completion: ([ToDo]?, RequestError?) -> Void ) {
-        completion(todoStore, nil)
-    }
-   ```
-3.  Run the project and rerun the tests by reloading the test page in the browser. 
-
-The first seven tests should now pass, with the eighth test failing:  
-:x: `each new todo has a url, which returns a todo`
+Start by cloning this repository to your system:
 
 ```
-GET http://localhost:8080/0
-FAILED
-
-404: Not Found (Cannot GET /0.)
+cd ~
+git clone https://github.com/IBM/ToDoBackend.git
 ```
 
-### 6. Add Support for handling a `GET` request on '/:id'
-The failing test is trying to load a specific ToDo item by making a `GET` request with the ID of the ToDo item that it wishes to retrieve, which is based on the ID in the `url` field of the ToDo item set when the item was stored by the earlier `POST` request. In the test above the reqest was for `GET /0` - a request for id 0.
-
-Kitura's Codable Routing is able to automatically convert identifiers used in the `GET` request to a parameter that is passed to the registered handler. As a result, the handler is registered against the `/` route, with the handler taking an extra parameter.
-
-1. Register a handler for a `GET` request on `/`:
-   ```swift
-    router.get("/", handler: getOneHandler)
-   ```
-
-2. Implement the `getOneHandler` that receives an `id` and responds with a ToDo item:
-   ```swift        
-    func getOneHandler(id: Int, completion: (ToDo?, RequestError?) -> Void ) {
-        completion(todoStore.first(where: {$0.id == id }), nil)
-    }
-   ```
-3.  Run the project and rerun the tests by reloading the test page in the browser. 
-
-The first nine tests now pass. The tenth fails with the following:  
-:x: `can change the todo's title by PATCHing to the todo's url`  
+Then, clone the testsuite you'll be using to verify your REST API:
 
 ```
-PATCH http://localhost:8080/0
-FAILED
-
-404: Not Found (Cannot PATCH /0.)
+cd ~
+git clone https://github.com/TodoBackend/todo-backend-js-spec.git
 ```
 
-### 7. Add Support for handling a `PATCH` request on `/:id`
-The failing test is trying to `PATCH` a specific ToDo item. A `PATCH` request updates an existing item by updating any fields sent as part of the `PATCH` request. This means that a field by field update needs to be done.
+The next step is to generate your first Kitura application. Using an application generator will get you started quickly and ensure that your Kitura application is cloud-ready.
 
-1.  Register a handler for a `PATCH` request on `/`:
-   ```swift
-   router.patch("/", handler: updateHandler)
-   ```
-2. Implement the `updateHandler` that receives an `id` and responds with the updated ToDo item:
-   ```swift
-    func updateHandler(id: Int, new: ToDo, completion: (ToDo?, RequestError?) -> Void ) {
-        guard let idMatch = todoStore.first(where: { $0.id == id }),
-            let idPosition = todoStore.index(of: idMatch) else { return }
-        var current = todoStore[idPosition]
-        current.user = new.user ?? current.user
-        current.order = new.order ?? current.order
-        current.title = new.title ?? current.title
-        current.completed = new.completed ?? current.completed
-        execute {
-            todoStore[idPosition] = current
-        }
-        completion(todoStore[idPosition], nil)
-    }
-   ```
-3.  Run the project and rerun the tests by reloading the test page in the browser. 
+There are three ways you can generate your application:
 
-Twelve tests should now be passing, with the thirteenth failing as follows:
-:x: `can delete a todo making a DELETE request to the todo's url`
+1. Using a web browser to create a Kitura "starter kit" in IBM Cloud, then downloading the generated code in a zip file. This requires signing up for a free IBM Cloud account (no credit card is required).
+2. At the command-line, by installing the Kitura command-line interface via Homebrew.
+3. Using a macOS desktop application we provide.
+
+You can choose whichever option you prefer.
+
+### Option 1: Create your Kitura starter kit in IBM Cloud
+
+1. Start by visiting [IBM Cloud](https://console.bluemix.net) in your web browser.
+2. If you already have a free IBM Cloud account, skip to the next step. Otherwise, click "Create a free Account", complete the form, and click "Create Account". Confirm your account by accessing your email and clicking "Confirm Account" in the email you are sent.
+3. Log in to IBM Cloud with your credentials.
+
+A starter kit is a pre-configured application template that allows you to deploy a production-ready application to IBM Cloud within minutes.
+
+Code generation technology creates an application in your preferred language and framework, which can be tailored to your needs and use case. Any services that are required in support of the use case are provisioned automatically.
+
+You can debug and test on your local workstation or in the cloud, and then
+use a DevOps toolchain to automate the delivery process.
+
+1. In the IBM Cloud dashboard, click the top left "hamburger" icon to open the navigation menu, then choose "Apple Development". This opens the IBM Apple Developer Service.
+2. Click "Starter Kits" in the left menu.
+3. Click "Create App".
+4. Name your project "ToDoServer".
+5. Under "Select your language" choose "Swift" so that a server-side Swift app is created.
+6. Click the "Create" button on the right hand side to create your app.
+
+The app details view is now displayed where you could configure your app, add services, and more.
+
+1. Click the "Download Code" button on the top right to download your Kitura starter kit application in a zip file.
+
+Your browser may automatically unzip the file for you. If it does not, unzip your app and copy it to the workshop location as follows:
 
 ```
-DELETE http://localhost:8080/0
-FAILED
-
-404: Not Found (Cannot DELETE /0.)
+cd ~/Downloads
+mkdir ToDoServer
+unzip -d ToDoServer <filename>.zip  # <filename>.zip was downloaded from IBM Cloud
+cp -R ToDoServer ~/ToDoBackend/ToDoServer
 ```
 
-### 8. Add Support for handling a DELETE request on '/:id'
-The failing test is trying to `DELETE` a specific ToDo item. This means registering an additional handler for `DELETE` that this time accepts an ID as a parameter.
+If it is already unzipped, just copy the files to the workshop location:
 
-1. Register a handler for a `DELETE` request on `/`:
-   ```swift
-   router.delete("/", handler: deleteOneHandler)
-   ```
-2. Implement the `deleteOneHandler` that receives an `id` and removes the specified ToDo item:
-   ```swift
-    func deleteOneHandler(id: Int, completion: (RequestError?) -> Void ) {
-        guard let idMatch = todoStore.first(where: { $0.id == id }),
-            let idPosition = todoStore.index(of: idMatch) else { return }
-        execute {
-            todoStore.remove(at: idPosition)
-        }
-        completion(nil)
-    }
-   ```
-3.  Run the project and rerun the tests by reloading the test page in the browser. 
+```
+cd ~/Downloads
+cp -R <foldername> ~/ToDoBackend/ToDoServer
+```
 
-All sixteen tests should now be passing!
+Now change to your project folder and generate an Xcode project for the rest of the workshop:
 
-### Congratulations, you've built a Kitura backend for the [Todo-Backend](https://www.todobackend.com) project!
+```
+cd ~/ToDoBackend/ToDoServer
+swift package generate-xcodeproj
+```
 
-## Next Step
+Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
 
-### An iOS application for the ToDo Backend
-This tutorial has helped you build a ToDo Backend for the web tests and web client from the [Todo-Backend](https://www.todobackend.com) project, but one of the great values of Swift is end to end development between iOS and the server. Clone the [iOSSampleKituraKit](https://github.com/IBM-Swift/iOSSampleKituraKit) repository and open the `iOSKituraKitSample.xcworkspace` to see a iOS app client for the ToDo-Backend project.
+### Option 2: Create your Kitura application at the command-line
 
-   ```
-   cd ~
-   git clone https://github.com/IBM-Swift/iOSSampleKituraKit.git
-   cd iOSSampleKituraKit/KituraiOS
-   open iOSKituraKitSample.xcworkspace/
-   ```
+1. Open a terminal window and check that you have Homebrew installed by running `brew --version`. If you need to install Homebrew, visit [brew.sh](https://brew.sh/) and follow the installation instructions.
+2. Install the Kitura command-line interface:  
+   1. Add the Kitura tap to your Homebrew: `brew tap ibm-swift/kitura`  
+   2. Install the Kitura CLI: `brew install kitura`
 
-Run (`⌘+R`) the iOS application. You should be able to use the app to add, change and delete ToDo items!
+You can check that the Kitura CLI has been installed correctly by running `kitura --help`.
+
+Now, generate your Kitura application:
+
+```
+mkdir ~/ToDoBackend/ToDoServer
+cd ~/ToDoBackend/ToDoServer
+kitura init
+```
+
+This creates a fully working Kitura project that provides monitoring and metrics which can then be extended with your application logic.
+
+Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
+
+### Option 3: Use the Kitura macOS app
+
+1. Visit [https://www.kitura.io/app.html](https://www.kitura.io/app.html) in your web browser and download the Kitura app.
+2. Install the app by opening the downloaded `Kitura.dmg` and dragging the app to your `Applications` folder.
+3. Open the `Kitura` app from your `Applications` folder.
+
+The Kitura macOS app provides an easy point-and-click way to generate a new Kitura project. There are two templates: Skeleton and Starter.
+
+1. Mouse over "Starter" and click "Create".
+2. Navigate to the "ToDoBackend" folder in your home folder.
+3. Change the project name to "ToDoServer".
+3. Click "Create".
+
+The Kitura app will create a new Kitura project for you, ready to deploy to the cloud.
+
+Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
