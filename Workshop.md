@@ -49,7 +49,7 @@ Implementing a compliant ToDo Backend is an incremental task, with the aim being
     ```
 
 2. Run your Kitura server in Xcode:
-    1) Change the selected target from "ToDoServer-Package" to the "TodoServer" executable. 2) Press the `Run` button or use the `⌘+R` key shortcut. 3) Select "Allow incoming network connections" if you are prompted.
+    1) Change the selected target from "ToDoServer-Package" to the "ToDoServer" executable. 2) Press the `Run` button or use the `⌘+R` key shortcut. 3) Select "Allow incoming network connections" if you are prompted.
 
 3. Check that some of the standard Kitura URLs are running:
     * Kitura splash screen: [http://localhost:8080/](http://localhost:8080/)
