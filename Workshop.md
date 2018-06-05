@@ -16,7 +16,7 @@ In order to implement a ToDo Backend, a server is required that provides support
 ### 1. Run the ToDo-Backend Tests:
 
 1. Open the tests in a web browser: `open ~/todo-backend-js-spec/index.html`
-2. Set a "test target root" of `http://localhost:8080/todos`
+2. Set a "test target root" of `http://localhost:8080`
 3. Click "run tests".
 
 All the tests should fail. The first error reported should be as follows:
@@ -26,19 +26,19 @@ All the tests should fail. The first error reported should be as follows:
 ```
 AssertionError: expected promise to be fulfilled but it was rejected with [Error: 
 
-GET http://localhost:8080/todos
+GET http://localhost:8080/
 FAILED
 
 The browser failed entirely when make an AJAX request.
 ```
 
-This shows that the tests made a `GET` request to `http://localhost.com:8080/todos`, but it failed with no response. This is expected as there is no server yet.
+This shows that the tests made a `GET` request to `http://localhost.com:8080`, but it failed with no response. This is expected as there is no server yet.
 
 In the instructions below, reloading the page will allow you to re-run the ToDo-Backend tests.
 
 ## Building a Kitura server
 
-Implementing a compliant ToDo Backend is an incremental task, with the aim being to pass more of the testsuite at each step. The first step is to build and run your Kitura server to response to requests.
+Implementing a compliant ToDo Backend is an incremental task, with the aim being to pass more of the testsuite at each step. The first step is to build and run your Kitura server to respond to requests.
 
 ### 1. Run your Kitura server
 
@@ -69,7 +69,7 @@ Kitura provides a package which makes it easy to add OpenAPI support to your app
     ```
 3. Update the target dependencies for the "Application" target to the following (note the lack of hyphen in KituraOpenAPI):
     ```swift
-    .target(name: "Application", dependencies: ["KituraOpenAPI", "Kitura", "Configuration", "CloudEnvironment", "Health", "SwiftMetrics" ]),
+    .target(name: "Application", dependencies: ["KituraOpenAPI", "Kitura", "CloudEnvironment", "Health", "SwiftMetrics" ]),
     ```
 
 In order for Xcode to pick up the new dependency, the Xcode project now needs to be regenerated.
@@ -94,7 +94,7 @@ Now we need to enable OpenAPI in our Kitura server.
    KituraOpenAPI.addEndpoints(to: router)
    ```
 
-4. Re-run the server project in Xcode  
+4. Re-run the server project in Xcode:
     1) Edit the scheme again and select a Run Executable of "ToDoServer". 2) Run the project, then "Allow incoming network connections" if you are prompted.
 
 Now, you can open [http://localhost:8080/openapi](http://localhost:8080/openapi) and view the live OpenAPI specification of your Kitura application in JSON format.
@@ -126,7 +126,7 @@ The first test should still fail with the following:
 ```
 AssertionError: expected promise to be fulfilled but it was rejected with [Error: 
 
-GET http://localhost:8080/todos
+GET http://localhost:8080
 FAILED
 
 The browser failed entirely when make an AJAX request.
@@ -185,11 +185,11 @@ The first test should now be passing!  But the second test is failing:
 
 In order to fix this, we need to implement a `POST` request that saves a ToDo item.
 
-### 4. Add Support for handling a POST request on `/todos`
+### 4. Add Support for handling a POST request on `/`
 
 REST APIs typically consist of an HTTP request using a verb such as `POST`, `PUT`, `GET` or `DELETE` along with a URL and an optional data payload. The server then handles the request and responds with an optional data payload.
 
-A request to store data typically consists of a POST request with the data to be stored, which the server then handles and responds with a copy of the data that has just been stored. This means we need to define a `ToDo` type, register a  handler for POST requests on `/todos`, and implement the handler to store the data.
+A request to store data typically consists of a POST request with the data to be stored, which the server then handles and responds with a copy of the data that has just been stored. This means we need to define a `ToDo` type, register a  handler for POST requests on `/`, and implement the handler to store the data.
 
 1. Define a data type for the ToDo items:
    1. Select the Application folder in the left hand explorer in Xcode
@@ -235,13 +235,13 @@ A request to store data typically consists of a POST request with the data to be
    ```
    This will be used to make sure that access to the todoStore is serialized, so the app does not crash on concurrent requests.
 
-3. Register a handler for a `POST` request on `/todos` that stores the ToDo item data.
+3. Register a handler for a `POST` request on `/` that stores the ToDo item data.
    1. Add the following into the `postInit()` function:
    ```swift
-   router.post("/todos", handler: storeHandler)
+   router.post("/", handler: storeHandler)
    ```
    2. Implement the `storeHandler()` that receives a ToDo, and returns the stored ToDo.
-   Add the following as a function in the App class:  
+   Add the following as a function in the App class:
    ```swift
     func storeHandler(todo: ToDo, completion: (ToDo?, RequestError?) -> Void ) {
         var todo = todo
@@ -249,7 +249,7 @@ A request to store data typically consists of a POST request with the data to be
             todo.completed = false
         }
         todo.id = nextId
-        todo.url = "http://localhost:8080/todos/\(nextId)"
+        todo.url = "http://localhost:8080/\(nextId)"
         nextId += 1
         execute {
             todoStore.append(todo)
@@ -264,7 +264,7 @@ A request to store data typically consists of a POST request with the data to be
 
 The first three tests should now pass.
 
-Open SwaggerUI again at [http://localhost:8080/openapi/ui](http://localhost:8080/openapi/ui) and expand the new POST route on `/todos`. Paste the following JSON into the "input" text box:
+Open SwaggerUI again at [http://localhost:8080/openapi/ui](http://localhost:8080/openapi/ui) and expand the new POST route on `/`. Paste the following JSON into the "input" text box:
 
 ```
 { "title": "mow the lawn" }
@@ -277,7 +277,7 @@ Click "Try it out!" and view the response body below.  You should see a JSON obj
   "id": 0,
   "title": "mow the lawn",
   "completed": false,
-  "url": "http://localhost:8080/todos/0"
+  "url": "http://localhost:8080/0"
 }
 ```
 
@@ -285,42 +285,44 @@ Congratulations, you have successfully added a ToDo item to the store using Swag
 
 Going back to the testsuite webpage, the next failing test says this:
   
-:X: `after a DELETE the api root responds to a GET with a JSON representation of an empty array`
+:x: `after a DELETE the api root responds to a GET with a JSON representation of an empty array`
 
 In order to fix this, handlers for `DELETE` and `GET` requests are needed.
 
-### 5. Add Support for handling a DELETE request on `/todos`
+### 5. Add Support for handling a DELETE request on `/`
 
 A request to delete data typically consists of a DELETE request. If the request is to delete a specific item, a URL encoded identifier is normally provided (eg. '/1' for the item with ID 1). If no identifier is provided, it is a request to delete all of the items.
 
-In order to pass the next test, the ToDoServer needs to handle a `DELETE` on `/todos` resulting in removing all stored ToDo items.
+In order to pass the next test, the ToDoServer needs to handle a `DELETE` on `/` resulting in removing all stored ToDo items.
 
-1. Register a handler for a `DELETE` request on `/todos` that empties the ToDo item data
-   1. Add the following into the `postInit()` function:
-   ```swift
-   router.delete("/todos", handler: deleteAllHandler)
-   ```
-   2. Implement the `deleteAllHandler()` that empties the todoStore  
-   Add the following as a function in the App class:  
-   ```swift
-    func deleteAllHandler(completion: (RequestError?) -> Void ) {
-        execute {
-            todoStore = []
-        }
-        completion(nil)
+Register a handler for a `DELETE` request on `/` that empties the ToDo item data.
+
+1. Add the following into the `postInit()` function:
+```swift
+router.delete("/", handler: deleteAllHandler)
+```
+
+2. Implement the `deleteAllHandler()` that empties the todoStore  
+Add the following as a function in the App class:  
+```swift
+func deleteAllHandler(completion: (RequestError?) -> Void ) {
+    execute {
+        todoStore = []
     }
-   ```
+    completion(nil)
+}
+```
 
-Build and run your application again, then reload SwaggerUI to see your new DELETE route. Expand the route and click "Try it out!" to delete the contents of the store. You should see a Response Body of "no content" and and Response Code of 204, indicating that the server successfully fulfilled the request.
+Build and run your application again, then reload SwaggerUI to see your new DELETE route. Expand the route and click "Try it out!" to delete the contents of the store. You should see a Response Body of "no content" and a Response Code of 204, indicating that the server successfully fulfilled the request.
 
-### 6. Add Support for handling a GET request on `/todos`
+### 6. Add Support for handling a GET request on `/`
 
 A request to load all of the stored data typically consists of a `GET` request with no data, which the server then handles and responds with an array of all the data in the store.
 
-1. Register a handler for a `GET` request on `/todos` that loads the data  
+1. Register a handler for a `GET` request on `/` that loads the data  
    Add the following into the `postInit()` function:  
    ```swift
-	router.get("/todos", handler: getAllHandler)
+	router.get("/", handler: getAllHandler)
    ```
 2. Implement the `getAllHandler()` that responds with all of the stored ToDo items as an array.      
    Add the following as a function in the App class:
@@ -335,23 +337,23 @@ The first seven tests should now pass, with the eighth test failing:
 :x: `each new todo has a url, which returns a todo`
 
 ```
-GET http://localhost:8080/todos/0
+GET http://localhost:8080/0
 FAILED
 
-404: Not Found (Cannot GET /todos/0.)
+404: Not Found (Cannot GET /0.)
 ```
 
 Refresh SwaggerUI again and view your new GET route. Clicking "Try it out!" will return the empty array (because you just restarted the application and the store is empty), but experiment with using the POST route to add ToDo items then viewing them by running the GET route again. REST APIs are easy!
 
-### 7. Add Support for handling a `GET` request on `/todos/:id`
+### 7. Add Support for handling a `GET` request on `/:id`
 
-The next failing test is trying to load a specific ToDo item by making a `GET` request with the ID of the ToDo item that it wishes to retrieve, which is based on the ID in the `url` field of the ToDo item set when the item was stored by the earlier `POST` request. In the test above the reqest was for `GET /todos/0` - a request for id 0.
+The next failing test is trying to load a specific ToDo item by making a `GET` request with the ID of the ToDo item that it wishes to retrieve, which is based on the ID in the `url` field of the ToDo item set when the item was stored by the earlier `POST` request. In the test above the reqest was for `GET /0` - a request for id 0.
 
-Kitura's Codable Routing is able to automatically convert identifiers used in the `GET` request to a parameter that is passed to the registered handler. As a result, the handler is registered against the `/todos` route, with the handler taking an extra parameter.
+Kitura's Codable Routing is able to automatically convert identifiers used in the `GET` request to a parameter that is passed to the registered handler. As a result, the handler is registered against the `/` route, with the handler taking an extra parameter.
 
-1. Register a handler for a `GET` request on `/todos`:
+1. Register a handler for a `GET` request on `/`:
    ```swift
-    router.get("/todos", handler: getOneHandler)
+    router.get("/", handler: getOneHandler)
    ```
 
 2. Implement the `getOneHandler()` that receives an `id` and responds with a ToDo item:
@@ -370,21 +372,21 @@ The first nine tests now pass. The tenth fails with the following:
 :x: `can change the todo's title by PATCHing to the todo's url`  
 
 ```
-PATCH http://localhost:8080/todos/0
+PATCH http://localhost:8080/0
 FAILED
 
-404: Not Found (Cannot PATCH /todos/0.)
+404: Not Found (Cannot PATCH /0.)
 ```
 
-Refresh SwaggerUI and experiment with using the POST route to create ToDo items, then using the GET route on `/todos/{id}` to retrieve the stored items by ID.
+Refresh SwaggerUI and experiment with using the POST route to create ToDo items, then using the GET route on `/{id}` to retrieve the stored items by ID.
 
-### 8. Add Support for handling a `PATCH` request on `/todos/:id`
+### 8. Add Support for handling a `PATCH` request on `/:id`
 
 The failing test is trying to `PATCH` a specific ToDo item. A `PATCH` request updates an existing item by updating any fields sent as part of the `PATCH` request. This means that a field by field update needs to be done.
 
-1.  Register a handler for a `PATCH` request on `/todos`:
+1.  Register a handler for a `PATCH` request on `/`:
    ```swift
-   router.patch("/todos", handler: updateHandler)
+   router.patch("/", handler: updateHandler)
    ```
 2. Implement the `updateHandler()` that receives an `id` and responds with the updated ToDo item:
    ```swift
@@ -409,13 +411,13 @@ Twelve tests should now be passing, with the thirteenth failing as follows:
 :x: `can delete a todo making a DELETE request to the todo's url`
 
 ```
-DELETE http://localhost:8080/todos/0
+DELETE http://localhost:8080/0
 FAILED
 
-404: Not Found (Cannot DELETE /todos/0.)
+404: Not Found (Cannot DELETE /0.)
 ```
 
-Refresh SwaggerUI and experiment with using the POST route to create ToDo items, then using the PATCH route to update an existing item. For example, if you have a ToDo item at `http://localhost:8080/todos/0` with a title of "mow the lawn", you can change its title by issuing a PATCH with id 0 and this JSON input:
+Refresh SwaggerUI and experiment with using the POST route to create ToDo items, then using the PATCH route to update an existing item. For example, if you have a ToDo item at `http://localhost:8080/0` with a title of "mow the lawn", you can change its title by issuing a PATCH with id 0 and this JSON input:
 
 ```
 { "title": "wash the dog" }
@@ -428,17 +430,17 @@ You should see a response code of 200 with a response body of:
   "id": 0,
   "title": "wash the dog",
   "completed": false,
-  "url": "http://localhost:8080/todos/0"
+  "url": "http://localhost:8080/0"
 }
 ```
 
-### 9. Add Support for handling a DELETE request on `/todos/:id`
+### 9. Add Support for handling a DELETE request on `/:id`
 
 The failing test is trying to `DELETE` a specific ToDo item. To fix this you need an additional route handler for `DELETE` that this time accepts an ID as a parameter.
 
-1. Register a handler for a `DELETE` request on `/todos`:
+1. Register a handler for a `DELETE` request on `/`:
    ```swift
-   router.delete("/todos", handler: deleteOneHandler)
+   router.delete("/", handler: deleteOneHandler)
    ```
 2. Implement the `deleteOneHandler()` that receives an `id` and removes the specified ToDo item:
    ```swift
@@ -462,7 +464,7 @@ All sixteen tests should now be passing!
 
 ### Try out the ToDo-Backend web client
 
-Now try visiting [https://todobackend.com/client/](https://todobackend.com/client/) in your browser to view the ToDo-Backend web client. Enter an API root of `http://localhost:8080/todos` and use the website to interact with your REST API. You can add, remove and update ToDo items as you wish.
+Now try visiting [https://todobackend.com/client/](https://todobackend.com/client/) in your browser to view the ToDo-Backend web client. Enter an API root of `http://localhost:8080/` and use the website to interact with your REST API. You can add, remove and update ToDo items as you wish.
 
 ### An iOS application for the ToDo-Backend
 This tutorial has helped you build a ToDo-Backend for the web tests and web client from the [Todo-Backend](https://www.todobackend.com) project, but one of the great values of Swift is end to end development between iOS and the server. Clone the [iOSSampleKituraKit](https://github.com/IBM-Swift/iOSSampleKituraKit) repository and open the `iOSKituraKitSample.xcworkspace` to see a iOS app client for the ToDo-Backend project.
