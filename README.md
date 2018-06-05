@@ -92,6 +92,13 @@ cd ~/Downloads
 cp -R <foldername> ~/ToDoBackend/ToDoServer
 ```
 
+Now change to your project folder and generate an Xcode project for the rest of the workshop:
+
+```
+cd ~/ToDoBackend/ToDoServer
+swift package generate-xcodeproj
+```
+
 Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
 
 ### Option 2: Create your Kitura application at the command-line
