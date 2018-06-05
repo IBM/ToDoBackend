@@ -10,6 +10,18 @@
 </a>
 </p>
 
+
+## Clone the resources  
+1. Clone this repository to your system:   
+```
+cd ~
+git clone https://github.com/IBM/ToDoBackend.git
+```
+2. clone the testsuite you'll be using to verify your REST API:  
+
+```
+git clone https://github.com/TodoBackend/todo-backend-js-spec.git
+```
 ## Run the tests
 In order to implement a ToDo Backend, a server is required that provides support for storing, retrieving, deleting and updating "to do" items. The ToDoBackend project doesn't provide a specification for how the server must respond, rather it provides a set of tests which the server must pass. The "todo-backend-js-spec" project provides those tests.
 
