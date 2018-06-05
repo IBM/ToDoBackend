@@ -147,7 +147,7 @@ Kitura provides a package which makes it easy to enable CORS in your application
     ```
 3. Update the target dependencies for the "Application" target to the following (note the lack of hyphen in KituraCORS):
     ```swift
-    .target(name: "Application", dependencies: ["KituraCORS", "KituraOpenAPI", "Kitura", "Configuration", "CloudEnvironment", "Health", "SwiftMetrics" ]),
+    .target(name: "Application", dependencies: ["KituraCORS", "KituraOpenAPI", "Kitura", "CloudEnvironment", "Health", "SwiftMetrics" ]),
     ```
 
 In order for Xcode to pick up the new dependency, the Xcode project now needs to be regenerated.
