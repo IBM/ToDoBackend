@@ -52,7 +52,45 @@ There are three ways you can generate your application:
 
 You can choose whichever option you prefer.
 
-### Option 1: Create your Kitura starter kit in IBM Cloud
+### Option 1: Use the Kitura macOS app
+
+1. Visit [https://www.kitura.io/app.html](https://www.kitura.io/app.html) in your web browser and download the Kitura app.
+2. Install the app by opening the downloaded `Kitura.dmg` and dragging the app to your `Applications` folder.
+3. Open the `Kitura` app from your `Applications` folder.
+
+The Kitura macOS app provides an easy point-and-click way to generate a new Kitura project. There are two templates: Skeleton and Starter.
+
+1. Mouse over "Starter" and click "Create".
+2. Navigate to the "ToDoBackend" folder in your home folder.
+3. Change the project name to "ToDoServer".
+3. Click "Create".
+
+The Kitura app will create a new Kitura project for you, ready to deploy to the cloud.
+
+Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
+
+### Option 2: Create your Kitura application at the command-line
+
+1. Open a terminal window and check that you have Homebrew installed by running `brew --version`. If you need to install Homebrew, visit [brew.sh](https://brew.sh/) and follow the installation instructions.
+2. Install the Kitura command-line interface:  
+   1. Add the Kitura tap to your Homebrew: `brew tap ibm-swift/kitura`  
+   2. Install the Kitura CLI: `brew install kitura`
+
+You can check that the Kitura CLI has been installed correctly by running `kitura --help`.
+
+Now, generate your Kitura application:
+
+```
+mkdir ~/ToDoBackend/ToDoServer
+cd ~/ToDoBackend/ToDoServer
+kitura init
+```
+
+This creates a fully working Kitura project that provides monitoring and metrics which can then be extended with your application logic.
+
+Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
+
+### Option 3: Create your Kitura starter kit in IBM Cloud
 
 1. Start by visiting [IBM Cloud](https://console.bluemix.net) in your web browser.
 2. If you already have a free IBM Cloud account, skip to the next step. Otherwise, click "Create a free Account", complete the form, and click "Create Account". Confirm your account by accessing your email and clicking "Confirm Account" in the email you are sent.
@@ -98,43 +136,5 @@ Now change to your project folder and generate an Xcode project for the rest of 
 cd ~/ToDoBackend/ToDoServer
 swift package generate-xcodeproj
 ```
-
-Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
-
-### Option 2: Create your Kitura application at the command-line
-
-1. Open a terminal window and check that you have Homebrew installed by running `brew --version`. If you need to install Homebrew, visit [brew.sh](https://brew.sh/) and follow the installation instructions.
-2. Install the Kitura command-line interface:  
-   1. Add the Kitura tap to your Homebrew: `brew tap ibm-swift/kitura`  
-   2. Install the Kitura CLI: `brew install kitura`
-
-You can check that the Kitura CLI has been installed correctly by running `kitura --help`.
-
-Now, generate your Kitura application:
-
-```
-mkdir ~/ToDoBackend/ToDoServer
-cd ~/ToDoBackend/ToDoServer
-kitura init
-```
-
-This creates a fully working Kitura project that provides monitoring and metrics which can then be extended with your application logic.
-
-Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
-
-### Option 3: Use the Kitura macOS app
-
-1. Visit [https://www.kitura.io/app.html](https://www.kitura.io/app.html) in your web browser and download the Kitura app.
-2. Install the app by opening the downloaded `Kitura.dmg` and dragging the app to your `Applications` folder.
-3. Open the `Kitura` app from your `Applications` folder.
-
-The Kitura macOS app provides an easy point-and-click way to generate a new Kitura project. There are two templates: Skeleton and Starter.
-
-1. Mouse over "Starter" and click "Create".
-2. Navigate to the "ToDoBackend" folder in your home folder.
-3. Change the project name to "ToDoServer".
-3. Click "Create".
-
-The Kitura app will create a new Kitura project for you, ready to deploy to the cloud.
 
 Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
