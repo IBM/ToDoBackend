@@ -46,9 +46,9 @@ The next step is to generate your first Kitura application. Using an application
 
 There are three ways you can generate your application:
 
-1. Using a web browser to create a Kitura "starter kit" in IBM Cloud, then downloading the generated code in a zip file. This requires signing up for a free IBM Cloud account (no credit card is required).
+1. Using the Kitura macOS app.
 2. At the command-line, by installing the Kitura command-line interface via Homebrew.
-3. Using a macOS desktop application we provide.
+3. Using a web browser to create a Kitura "starter kit" in IBM Cloud, then downloading the generated code in a zip file. This requires signing up for a free IBM Cloud account (no credit card is required).
 
 You can choose whichever option you prefer.
 
