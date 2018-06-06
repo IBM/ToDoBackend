@@ -63,7 +63,7 @@ Implementing a compliant ToDo Backend is an incremental task, with the aim being
 Kitura provides a package which makes it easy to add OpenAPI support to your application. Let's add OpenAPI.
 
 1. Open the `ToDoServer` > `Package.swift` file
-2. Add the following to the end of the dependencies section of the Package.swift file:
+2. Add the following to the end of the dependencies section of the `Package.swift` file:
     ```swift
         .package(url: "https://github.com/IBM-Swift/Kitura-OpenAPI.git", from: "1.0.0"),
     ```
@@ -141,7 +141,7 @@ By default, web servers only serve content to web pages that were served by that
 Kitura provides a package which makes it easy to enable CORS in your application. Let's add CORS to your project.
 
 1. Open the `ToDoServer` > `Package.swift` file
-2. Add the following to the end of the dependencies section of the Package.swift file:
+2. Add the following to the end of the dependencies section of the `Package.swift` file:
     ```swift
         .package(url: "https://github.com/IBM-Swift/Kitura-CORS.git", from: "2.1.0"),
     ```
@@ -194,7 +194,7 @@ A request to store data typically consists of a POST request with the data to be
 1. Define a data type for the ToDo items:
    1. Select the Application folder in the left hand explorer in Xcode
    2. Select `File` > `New` > `File...` from the pull down menu
-   3. Select Swift File and click `Next`
+   3. Select `Swift File` and click `Next`
    4. Name the file `Models.swift`, change the `Targets` from `ToDoServerPackageDescription` to `Application`, then click `Create`
    5. Add the following to the created file:
    ```swift
