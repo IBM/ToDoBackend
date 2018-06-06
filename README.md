@@ -56,7 +56,7 @@ You can choose whichever option you prefer.
 
 1. Visit [https://www.kitura.io/app.html](https://www.kitura.io/app.html) in your web browser and download the Kitura app.
 2. Install the app by opening the downloaded `Kitura.dmg` and dragging the app to your `Applications` folder.
-3. Open the `Kitura` app from your `Applications` folder.
+3. Ctrl-click the `Kitura` app in your `Applications` folder and choose "Open".
 
 The Kitura macOS app provides an easy point-and-click way to generate a new Kitura project. There are two templates: Skeleton and Starter.
 
