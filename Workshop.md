@@ -467,7 +467,7 @@ All sixteen tests should now be passing!
 Now try visiting [https://todobackend.com/client/](https://todobackend.com/client/) in your browser to view the ToDo-Backend web client. Enter an API root of `http://localhost:8080/` and use the website to interact with your REST API. You can add, remove and update ToDo items as you wish.
 
 ### Attach a database to your project
-This [extra tutorial](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md) builds upon the project created in this Workshop and replaces storing ToDos in an Array with a database running locally on your machine, using Swift-Kuery-ORM and PostgreSQL. 
+Our [ORM tutorial](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md) builds upon the project created in this Workshop and replaces storing ToDos in an Array with a database running locally on your machine, using Swift-Kuery-ORM and PostgreSQL. 
 
 ### An iOS application for the ToDo-Backend
 This tutorial has helped you build a ToDo-Backend for the web tests and web client from the [Todo-Backend](https://www.todobackend.com) project, but one of the great values of Swift is end to end development between iOS and the server. Clone the [iOSSampleKituraKit](https://github.com/IBM-Swift/iOSSampleKituraKit) repository and open the `iOSKituraKitSample.xcworkspace` to see an iOS app client for the ToDo-Backend project.

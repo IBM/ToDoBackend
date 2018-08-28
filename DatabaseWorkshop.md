@@ -1,26 +1,15 @@
 # Adding persistance to ToDoBackend with Swift-Kuery-ORM
 
-<p align="center">
-<img src="https://www.ibm.com/cloud-computing/bluemix/sites/default/files/assets/page/catalog-swift.svg" width="120" alt="Kitura Bird">
-</p>
+So far, our ToDoBackend has been storing, retrieving, deleting and updating "to do" items in a local `Array`. Now we will show you how to use our ORM (Object Relational Mapping) library, called Swift-Kuery-ORM, to store the "to do" items in a PostgreSQL database. This allows you to simplify the persistence of model objects with your server.
 
-<p align="center">
-<a href= "http://swift-at-ibm-slack.mybluemix.net/"> 
-    <img src="http://swift-at-ibm-slack.mybluemix.net/badge.svg"  alt="Slack"> 
-</a>
-</p>
+## Pre-Requisite
 
-## Prerequisite
 This is a follow on tutorial to our [ToDoBackend tutorial](https://github.com/IBM/ToDoBackend). Please complete that before proceeding with this tutorial.
 
 ## Installing PostgreSQL
 
-Before we start, ensure you have PostgreSQL installed and running. In Terminal, run:
-```
-brew services start postgresql
-```
+In this tutorial you'll be using the [Swift Kuery PostgreSQL plugin](https://github.com/IBM-Swift/Swift-Kuery-PostgreSQL), so you will need PostgreSQL running on your local machine. You can install and start PostgreSQL as follows:
 
-If it's already running then skip ahead to step 1. If you do not have it installed then run the following from Terminal:
 ```
 brew install postgresql
 brew services start postgresql
@@ -29,16 +18,16 @@ brew services start postgresql
 ## Persistance over local storage
 Adding a database connection means your state remains after you close your server down, and depending on where your database is stored, different applications on different machines can access the data (for instance, in a Cloud application).
 
-### Step 1 - Create a Database
-Create a new database for the project called `tododb` using your Terminal:
+### 1. Create a Database
+Create a new database for the project called `tododb`:
 ```
 createdb tododb
 ```
 
-### Step 2 - Updating Package.swift
+### 2. Updating Package.swift
 Your `Package.swift` needs two new Packages for the PostgreSQL and ORM to work. 
 1. Open the `ToDoServer` > `Package.swift` file
-2. Add the following two lines to the end of the Package.swift's dependencies section:
+2. Add the following two lines to the end of the dependencies section of the `Package.swift` file:
 ```swift
 .package(url: "https://github.com/IBM-Swift/Swift-Kuery-ORM", from: "0.3.1"),
 .package(url: "https://github.com/IBM-Swift/Swift-Kuery-PostgreSQL", from: "1.2.0"),
@@ -47,30 +36,38 @@ Your `Package.swift` needs two new Packages for the PostgreSQL and ORM to work.
 ```swift
 .target(name: "Application", dependencies: ["SwiftKueryPostgreSQL", "SwiftKueryORM", "KituraCORS", "KituraOpenAPI", "Kitura", "CloudEnvironment","SwiftMetrics","Health",]),
 ```
-4. We need to fetch the new dependencies and generate a new Xcode Project file. To do so, make sure Xcode is closed and:
+In order for Xcode to pick up the new dependencies, the Xcode project now needs to be regenerated.
+
+1. Close Xcode
+2. Rengerate the Xcode project and reopen:
+
 ```bash
 cd ~/ToDoBackend/ToDoServer
 swift package generate-xcodeproj
 open ToDoServer.xcodeproj
 ```
 
-### Step 3 - Importing into the Application
+### 3. Importing into the Application
 1. In Xcode, open `Sources` > `Application` > `Application.swift`
 2. Add imports for the two new libraries below the other import statements at the top of the file:
 ```swift
 import SwiftKueryORM
 import SwiftKueryPostgreSQL
 ```
-### Step 4 - Extending ToDo to conform to Model
-In order for your `ToDo` struct located in `Application` > `Model.swift`, we need to conform `ToDo` to Swift-Kuery-ORMs Model protocol. At the bottom of `Application.swift` add:
+### 4. Extending ToDo to conform to Model
+The `Model` protocol is the key to using the ORM. We declared our `ToDo` struct, located in `Application` > `Model.swift`, to be Codable to simplify our RESTful routes for these objects on our server. The Model protocol extends what Codable does to work with the ORM, so now you need the `ToDo` struct to conform to the `Model` protocol.
+
+At the end of your `Application.swift` file (after the final `}`) extend your object by adding the following:
+
 ```swift
 extension ToDo: Model {
 }
 ```
 This exposes new methods to ToDo for saving, finding, deleting etc. from a database.
 
-### Step 5 - Creating a connection with the database
-Add the following Class to the bottom of the file, outside the `App` classes final curly brace:
+### 5. Creating a connection with the database
+Add the following code, to set up your database connection pool, to the end of the `Application.swift` file, below the final curly brace:
+
 ```swift
 class Persistence {
 	static func setUp() {
@@ -79,32 +76,34 @@ class Persistence {
 	}
 }
 ```
-This code is going to create a connection pool and set it as the default database. We now need to call the `setUp()` method inside  `App`s `postInit()` method:
-```swift
-		Persistence.setUp()
-		do {
-			try ToDo.createTableSync()
-		} catch let error {
-			print("Database already exists.")
-		}
-```
-This will create a table for us. We can now begin modifying the methods to switch saving to the `todoStore` and instead save to the database.
+Add the following code to call the `setUp()` method and create a database table (which will be called ToDos) to the `postInit()` method within the `Application.swift` file:
 
-To test everything is working as it should, we can run the Kitura server and check that a table called `ToDos` is created:
+```swift
+Persistence.setUp()
+do {
+	try ToDo.createTableSync()
+} catch let error {
+	print("Table already exists. Error: \(String(describing: error))")
+}
+```
+To check that a database table called `ToDos` has been created, run your Kitura server and then use `psql`as follows:
+
 ```sql
 psql tododb
-SELECT * FROM "ToDos"
+SELECT * FROM "ToDos";
 ```
-This should print the columns of a table, with no data in any of the colums. We will change the methods for handling requests now to store and retrieve data from this database.
+This should print the column names of the `ToDos` table with no data in (i.e. no rows).
 
-### Step 6 - Adding  @escaping
+Now we will start modifying the methods which handle requests so that they no longer use the `todoStore` array and instead store and retrieve data from this database table.
+
+### 6. Adding  @escaping
 All of the handlers now need to have `@escaping` added to their function signature, as the ORM uses an escaping method. Add `@escaping` to each method, after `completion:`. For example:
 ```swift
 func storeHandler(todo: ToDo, completion: @escaping (ToDo?, RequestError?) -> Void ) { ...
 func deleteAllHandler(completion: @escaping (RequestError?) -> Void ) { ...
 ```
-### Step 7 - storeHandler() updates
-We will first update storeHandler() to use the database. Remove all of the code between the methods curly braces and paste in the following:
+### 7. storeHandler() updates
+We will first update storeHandler() to use the database. Remove all of the code between the method's curly braces and paste in the following:
 ```swift
 		var todo = todo
 		if todo.completed == nil {
@@ -115,8 +114,8 @@ We will first update storeHandler() to use the database. Remove all of the code 
 		nextId += 1
 		todo.save(completion)
 ```
-This code is similar to the original but uses `todo.save(completion)` which saves the `todo` object to the database and then calls the methods completion handler.
-### Step 8 - deleteOne(), deleteAll(), getOne(), getAll()
+This code is similar to the original but uses `todo.save(completion)` which saves the `todo` object to the database and then calls the method's completion handler.
+### 8. deleteOne(), deleteAll(), getOne(), getAll()
 These methods are easy to update as their logic can happen with one call using the ORM! 
 ```swift
 	func deleteAllHandler(completion: @escaping (RequestError?) -> Void ) {
@@ -135,11 +134,11 @@ These methods are easy to update as their logic can happen with one call using t
 		ToDo.find(id: id, completion)
 	}
 ```
-Each one now uses one call to the database to accomplish it's task. The code is also easy to understand just from reading the calls happening inside the methods.
+Each one now uses one call to the database to accomplish its task. The code is now simpler and easier to understand because each method uses only one call to the database to accomplish its task.
 
-### Step 9 - updateHandler()  
+### 9. updateHandler()  
 
-This one has a little more going on as we need to fetch the version of the `ToDo` currently stored in our database, assess the differences between this version of the `ToDo` and the patched version being passed into the method, make the changes and then commit the modified `ToDo` back to the database.
+This method is a little more complex as we need to fetch the `ToDo` object that is currently stored in our database, assess the differences between this version of the `ToDo` object and the patched version being passed into the method, make the changes and then commit the modified `ToDo` object to the database
 
 ```swift
 	func updateHandler(id: Int, new: ToDo, completion: @escaping (ToDo?, RequestError?) -> Void ) {
@@ -170,9 +169,11 @@ This one has a little more going on as we need to fetch the version of the `ToDo
 
 Again, the logic is similar to before but with some added error handling for fetching from the database incase the `id` doesn't exist. 
 
-The final step is now to remove the `todoStore` variable from the top of the `App` Class.
+### 10. Remove todoStore variable
 
-### Step 10 - Running the Tests
+The final step is to remove the `todoStore` variable definition from the top of the `App`class within `Application.swift`.
+
+### 11. Running the Tests
 
 That's it! We have now modified all we need to have the ORM running inside our project. Run the Xcode project with ⌘R and use Terminal to launch the Test suite:
 
@@ -182,4 +183,4 @@ open ~/todo-backend-js-spec/index.html
 
 Set the test target root to `http://localhost:8080/` and you should see them all pass, just as they did before we added a database connection.
 
-Congratulations! We have removed the projects dependency on a volatile, local storage option and updated it to use a persistent and accessible database, using Swift 4s Codable feature to maintain our ToDo type at all times.
+**Congratulations! We have removed the project's dependency on a volatile, local storage option and updated it to use a persistent and accessible database, using Swift 4's Codable feature along side our ORM to maintain our ToDo type.**
