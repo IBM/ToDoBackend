@@ -15,15 +15,18 @@ In this section you will learn about:
 
 Ensure you have installed [Docker for Desktop](https://www.docker.com/products/docker-desktop) on your Mac and enabled Kubernetes within the app. To do so, select the docker icon in the Menu Bar and click Preferences > Kubernetes Tab > Enable Kubernetes. It will take a few moments to install and start up, but when the indicator light in the bottom right corner is green, you're ready to go!
 
-You are also going to need to install Helm using brew. Enter the following into your Terminal:
-
-```
-brew install kubernetes-helm
-```
-
 ![docker-menubar](./resources/docker-menubar.png)
 
 ![docker-app](./resources/docker-app.png)
+
+You are also going to need to install Helm using brew. Enter the following into your Terminal:
+
+```bash
+brew install kubernetes-helm
+```
+**Note:** if you get an error at this stage referencing a URL containing `kube`, then you already have Kubernetes installed on your system and are now running with multiple contexts. For the purposes of this workshop, change to the Kubernetes context by accessing Docker's menubar dropdown (not prefences like before), going into Kubernetes and under context, `select docker-for-desktop`.
+
+![docker-context](./resources/docker-context.png)
 
 ## Deploying a PostgreSQL database instance
 
