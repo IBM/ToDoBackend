@@ -183,4 +183,6 @@ open ~/todo-backend-js-spec/index.html
 
 Set the test target root to `http://localhost:8080/` and you should see them all pass, just as they did before we added a database connection.
 
-**Congratulations! We have removed the project's dependency on a volatile, local storage option and updated it to use a persistent and accessible database, using Swift 4's Codable feature along side our ORM to maintain our ToDo type.**
+Congratulations! We have removed the project's dependency on a non-persistent storage option and updated it to use a persistent and accessible database, using Swift 4's Codable feature along side our ORM to maintain our ToDo type.
+
+**Ready to learn about Kubernetes? [This guide](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md) will take you, step-by-step, through setting up Docker for Desktops Kubernetes cluster, creating Docker images from your Swift code, and deploying releases using both remote and local Helm charts.**

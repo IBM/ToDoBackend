@@ -6,6 +6,8 @@ Everything we have built so far has run locally on macOS. Using the Helm charts 
 
 ## Pre-Requisites
 
+This is a follow on from the previous tutorial, [Adding persistance to ToDoBackend with Swift-Kuery-ORM](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md).
+
 In this section you will learn about:
 
 * Installing Docker for Desktop
