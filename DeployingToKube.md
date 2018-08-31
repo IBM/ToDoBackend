@@ -35,7 +35,6 @@ In this section you will learn about:
 * Adding repos to Helm
 
 - Create a PostgreSQL release
-- Creating a database within your release
 
 The entire application will consist of two Pods (a Kubernetes Pods, not a CocoaPods), one for the database and one for the Kitura server running your Swift code. We will start by deploying a PostgreSQL release to your local Kubernetes cluster using a Helm chart. 
 
@@ -57,41 +56,10 @@ We can now create a PostgreSQL release called `postgresql-database`.
 **Note**: Kubernetes and Helm are very specific on names, and calling your database anything else will result in later parts of the tutorial requiring tweaking.
 
 ```bash
-helm install --name postgresql-database stable/postgresql
+helm install --name postgresql-database --set postgresDatabase=tododb,postgresPassword=p4ssw0rd stable/postgresql
 ```
 
-There should be output immediately, and we need to run some of the commands listed. Specifically, we need the password generated for the postgres user account.
-
-First we need to fetch the password, and for convinience we will store it as a variable called `PGPASSWORD` in our shell session.
-
-```
-PGPASSWORD=$(kubectl get secret --namespace default postgresql-database -o jsonpath="{.data.postgres-password}" | base64 --decode; echo)
-```
-Using the password variable saved in the previous command, we can now check our connection works by connecting to the database through Kubernetes' `run` command.
-```
-kubectl run --namespace default postgresql-database-client --restart=Never --rm --tty -i --image postgres \
->    --env "PGPASSWORD=$PGPASSWORD" \
->    --command -- psql -U postgres \
->    -h postgresql-database postgres
-```
-
-When the prompt appears, exit using `\q`.
-
-### Create a database within your PostgreSQL release
-
-We must now create a database within the postgresql release, similar to what we did in the previous tutorial. PostgreSQL is running inside a Docker container, which lives inside your Kubernetes cluster, so we need to get into the Docker container running PostgreSQL. We need the Pod name for the next command, which is randomly assinged when the Pod is generated.
-
-```bash
-kubectl get pods #Copy the value under NAME prefixed by postgresql-database
-kubectl exec -it <COPIED-POD-NAME> bash
-```
-
-We are now inside the Docker container, denoted by your prompt changing to `root@COPIED-POD-NAME`. We can now use the same command from the last tutorial to create our database.
-
-```bash
-createdb tododb
-exit #Exits the Docker container
-```
+*The `--set` flag tells Helm to set some values during the `install` process. For PostgreSQL, we can specify a database we want created. We call that database `tododb` to match the name already in our Swift code from the last tutorial. We also set the database password to be the **extremely secure** value of `p4ssw0rd`.*
 
 We now have a database called `tododb` inside your Docker container, running within your local Kubernetes cluster. Well done!
 
@@ -99,24 +67,18 @@ We now have a database called `tododb` inside your Docker container, running wit
 
 ### Edit the Swift code for connection to Kubernetes
 
-Your Swift code is going to need some minor changes to reflect using a database inside the local cluster. All the changes are happening in the declaration within your `Persistence` class in `Application.swift`, inside the `let pool =` assignment. Here is where the password for the database you noted in step 2 will be used.
+Your Swift code is going to need some minor changes to reflect using a database inside the local cluster. All the changes are happening in the declaration within your `Persistence` class in `Application.swift`, inside the `let pool` assignment.
 
 Change `host:` from `localhost` to `postgresql-database`. Keep port as `5432`
 
-We need to know the value of `PGPASSWORD` stored locally in our shell, so we must echo it and copy/paste it into our Swift code.
-
-```bash
-echo $PGPASSWORD
-```
-
-Leave `.databaseName("tododb") ` as it is. Add `.password("RESULT FROM ECHO")` and `.userName("postgres")`. Make sure each element is separated with a comma, and all the values you entered are type `String`. 
+Leave `.databaseName("tododb") ` as it is. Add `.password("p4ssw0rd")` and `.userName("postgres")`. Make sure each element is separated with a comma, and all the values you entered are type `String`. 
 
 These changes allow the Kitura sever to access the database and write/read data from it.
 
-Your changes should look like this, but the password will be different (same as the echo result).
+Your changes should look like this:
 
 ```swift
-let pool = PostgreSQLConnection.createPool(host: "postgresql-database", port: 5432, options: [.databaseName("tododb"), .password("XXXXXX"), .userName("postgres")], poolOptions: ConnectionPoolOptions(initialCapacity: 10, maxCapacity: 50, timeout: 1000))
+let pool = PostgreSQLConnection.createPool(host: "postgresql-database", port: 5432, options: [.databaseName("tododb"), .password("p4ssw0rd"), .userName("postgres")], poolOptions: ConnectionPoolOptions(initialCapacity: 10, maxCapacity: 50, timeout: 1000))
 ```
 
 ## Docker
@@ -180,7 +142,9 @@ In this section you will learn about:
 
 First we must edit the chart that will be used to deploy to Kubernetes to point to our local, tagged `server-run` image. Using Xcode's left sidebar, navigate to chart > ToDoServer > values.yaml.
 
-This acts like a blueprint for Helm to use when deploying our application to Kubernetes. We need to modify the `repository`, `tag` and `pullPolicy` lines (towards the top of the file). Make sure your indentation is consistent with the file and YAML does not support tabs!
+This acts like a blueprint for Helm to use when deploying our application to Kubernetes. We need to modify the `repository`, `tag` and `pullPolicy` lines (towards the top of the file). 
+
+**Caution:** make sure your indentation is consistent with the rest of the file, and YAML does not support tabs so use spaces instead!
 
 ```yaml
 ...
