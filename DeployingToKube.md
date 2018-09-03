@@ -215,7 +215,7 @@ We can't navigate to `localhost:8080` as usual because our cluster isn't part of
 
 ```bash
 kubectl get pods #Copy the todoserver NAME
-kubectl port-forward <todoserver-deployment-XXXXXX-XXXXX> 8080:8080
+kubectl port-forward todoserver-deployment-XXXXXX-XXXXX 8080:8080
 ```
 
 We can now open a browser, and go to [localhost:8080/openapi/ui](localhost:8080/openapi/ui) where the OpenAPI dashboard should display. Using the drop down menus, select `POST /` and click the Example Value on the right hand side to autofill the input field. Now select `Try it out!` and a `201` response should be recieved (you may need to scroll down to see it).
