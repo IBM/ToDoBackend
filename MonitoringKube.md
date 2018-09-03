@@ -49,7 +49,7 @@ You can then run the following two commands in order to be able to connect to Gr
 export POD_NAME=$(kubectl get pods --namespace grafana -l "app=grafana" -o jsonpath="{.items[0].metadata.name}")
 kubectl --namespace grafana port-forward $POD_NAME 3000
 ```
-You can now connect to Grafana at the following address:
+You can now connect to Grafana at the following address, using `admin` and `PASSWORD` to login:
 
 * [http://localhost:3000](http://localhost:3000)
 
