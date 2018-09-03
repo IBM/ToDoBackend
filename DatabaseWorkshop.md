@@ -1,6 +1,8 @@
 # Adding persistance to ToDoBackend with Swift-Kuery-ORM
 
-So far, our ToDoBackend has been storing, retrieving, deleting and updating "to do" items in a local `Array`. Now we will show you how to use our ORM (Object Relational Mapping) library, called Swift-Kuery-ORM, to store the "to do" items in a PostgreSQL database. This allows you to simplify the persistence of model objects with your server.
+So far, our ToDoBackend has been storing, retrieving, deleting and updating "to do" items in a local in-memory `Array`.
+
+Now we will show you how to use our ORM (Object Relational Mapping) library, called Swift-Kuery-ORM, to store the "to do" items in a PostgreSQL database. This allows you to simplify the persistence of model objects with your server.
 
 ## Pre-Requisite
 
@@ -16,17 +18,17 @@ brew services start postgresql
 ```
 
 ## Persistance over local storage
-Adding a database connection means your state remains after you close your server down, and depending on where your database is stored, different applications on different machines can access the data (for instance, in a Cloud application).
+Adding a database means your "todo" items are saved even after you close your server down. Also, depending on where your database is stored, different applications on different machines can access the data (for instance, in a cloud application).
 
 ### 1. Create a Database
-Create a new database for the project called `tododb`:
+Create a new PostgreSQL database for the project called `tododb`:
 ```
 createdb tododb
 ```
 
 ### 2. Updating Package.swift
 Your `Package.swift` needs two new Packages for the PostgreSQL and ORM to work. 
-1. Open the `ToDoServer` > `Package.swift` file
+1. Open the `ToDoServer` > `Package.swift` file in Xcode.
 2. Add the following two lines to the end of the dependencies section of the `Package.swift` file:
 ```swift
 .package(url: "https://github.com/IBM-Swift/Swift-Kuery-ORM", from: "0.3.1"),
@@ -55,7 +57,9 @@ import SwiftKueryORM
 import SwiftKueryPostgreSQL
 ```
 ### 4. Extending ToDo to conform to Model
-The `Model` protocol is the key to using the ORM. We declared our `ToDo` struct, located in `Application` > `Model.swift`, to be Codable to simplify our RESTful routes for these objects on our server. The Model protocol extends what Codable does to work with the ORM, so now you need the `ToDo` struct to conform to the `Model` protocol.
+The `Model` protocol is the key to using the ORM. The `model` protocol provides the functionality for saving and retrieving items to and from the database.
+
+Earlier, we declared our `ToDo` struct, located in `Application` > `Model.swift`, to be Codable to simplify our RESTful routes for these objects on our server. The Model protocol extends what Codable does to work with the ORM, so now you also need the `ToDo` struct to conform to the `Model` protocol.
 
 At the end of your `Application.swift` file (after the final `}`) extend your object by adding the following:
 
@@ -86,7 +90,7 @@ do {
 	print("Table already exists. Error: \(String(describing: error))")
 }
 ```
-To check that a database table called `ToDos` has been created, run your Kitura server and then use `psql`as follows:
+To check that a database table called `ToDos` has been created, run your Kitura server and then use `psql` from the command-line as follows:
 
 ```sql
 psql tododb
@@ -94,7 +98,7 @@ SELECT * FROM "ToDos";
 ```
 This should print the column names of the `ToDos` table with no data in (i.e. no rows).
 
-Now we will start modifying the methods which handle requests so that they no longer use the `todoStore` array and instead store and retrieve data from this database table.
+Now we will start modifying the methods which handle requests so that they no longer use the in-memory `todoStore` array and instead store and retrieve data from the database table.
 
 ### 6. Adding  @escaping
 All of the handlers now need to have `@escaping` added to their function signature, as the ORM uses an escaping method. Add `@escaping` to each method, after `completion:`. For example:
@@ -134,7 +138,7 @@ These methods are easy to update as their logic can happen with one call using t
 		ToDo.find(id: id, completion)
 	}
 ```
-Each one now uses one call to the database to accomplish its task. The code is now simpler and easier to understand because each method uses only one call to the database to accomplish its task.
+Each one now uses one call to the database to accomplish its task. The code is now simpler and easier to understand because each method uses only one call to the database to accomplish its task, and the ORM handles all the complexity of saving and retrieving items in the database.
 
 ### 9. updateHandler()  
 
@@ -167,11 +171,11 @@ This method is a little more complex as we need to fetch the `ToDo` object tha
 	}
 ```
 
-Again, the logic is similar to before but with some added error handling for fetching from the database incase the `id` doesn't exist. 
+Again, the logic is similar to before but with some added error handling for fetching from the database in case the `id` doesn't exist. 
 
-### 10. Remove todoStore variable
+### 10. Remove the todoStore property
 
-The final step is to remove the `todoStore` variable definition from the top of the `App`class within `Application.swift`.
+The final step is to remove the `todoStore` property definition from the top of the `App`class within `Application.swift` as it is no longer needed.
 
 ### 11. Running the Tests
 
@@ -183,6 +187,13 @@ open ~/todo-backend-js-spec/index.html
 
 Set the test target root to `http://localhost:8080/` and you should see them all pass, just as they did before we added a database connection.
 
+You can use `psql` to check that the todo items are being correctly stored in the database:
+
+```sql
+psql tododb
+SELECT * FROM "ToDos";
+```
+
 Congratulations! We have removed the project's dependency on a non-persistent storage option and updated it to use a persistent and accessible database, using Swift 4's Codable feature along side our ORM to maintain our ToDo type.
 
-**Ready to learn about Kubernetes? [This guide](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md) will take you, step-by-step, through setting up Docker for Desktops Kubernetes cluster, creating Docker images from your Swift code, and deploying releases using both remote and local Helm charts.**
+**Ready to learn about Docker and Kubernetes? [This guide](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md) will take you, step-by-step, through setting up a Kubernetes cluster using Docker for Desktop, building a Docker image of your Kitura app, and deploying releases using both remote and local Helm charts.**
