@@ -32,13 +32,13 @@ FAILED
 The browser failed entirely when make an AJAX request.
 ```
 
-This shows that the tests made a `GET` request to `http://localhost.com:8080`, but it failed with no response. This is expected as there is no server yet.
+This shows that the tests made a `GET` request to `http://localhost.com:8080`, but it failed with no response. This is expected as there is no server running yet - we're going to fix that in a moment!
 
 In the instructions below, reloading the page will allow you to re-run the ToDo-Backend tests.
 
 ## Building a Kitura server
 
-Implementing a compliant ToDo Backend is an incremental task, with the aim being to pass more of the testsuite at each step. The first step is to build and run your Kitura server to respond to requests.
+Implementing a compliant ToDo Backend is an incremental task, with the aim being to pass more of the testsuite at each step. The first step is to build and run your Kitura server so it can respond to requests.
 
 ### 1. Run your Kitura server
 
@@ -57,6 +57,8 @@ Implementing a compliant ToDo Backend is an incremental task, with the aim being
     * Kitura health API: [http://localhost:8080/health](http://localhost:8080/health)
 
 ### 2. Add support for OpenAPI
+
+**Important**: If you started your project by choosing the "OpenAPI" tile in the Kitura desktop app, you can skip to Section 3.
 
 [OpenAPI](https://www.openapis.org/) is the most popular way to document RESTful web services. The OpenAPI ecosystem provides a broad range of tools and services for developers across the API lifecycle.
 
@@ -97,6 +99,8 @@ Now we need to enable OpenAPI in our Kitura server.
 4. Re-run the server project in Xcode:
     1) Edit the scheme again and select a Run Executable of "ToDoServer". 2) Run the project, then "Allow incoming network connections" if you are prompted.
 
+### 3. Try out OpenAPI in Kitura
+
 Now, you can open [http://localhost:8080/openapi](http://localhost:8080/openapi) and view the live OpenAPI specification of your Kitura application in JSON format.
 
 You can also open [http://localhost:8080/openapi/ui](http://localhost:8080/openapi/ui) and view SwaggerUI, a popular API development tool. You will see one route defined: the GET `/health` route you visited earlier. Click on the route to expand it, then click "Try it out!" to query the API from inside SwaggerUI.
@@ -115,7 +119,7 @@ and a Response Code of 200.
 
 Congratulations, you have added OpenAPI support to your Kitura application and used SwaggerUI to query a REST API!
 
-### 3. Add Cross Origin Resource Sharing (CORS) Support
+### 4. Add Cross Origin Resource Sharing (CORS) Support
 
 Re-run the ToDo-Backend tests by reloading the test page in your browser.
 
@@ -185,7 +189,7 @@ The first test should now be passing!  But the second test is failing:
 
 In order to fix this, we need to implement a `POST` request that saves a ToDo item.
 
-### 4. Add Support for handling a POST request on `/`
+### 5. Add Support for handling a POST request on `/`
 
 REST APIs typically consist of an HTTP request using a verb such as `POST`, `PUT`, `GET` or `DELETE` along with a URL and an optional data payload. The server then handles the request and responds with an optional data payload.
 
@@ -289,7 +293,7 @@ Going back to the testsuite webpage, the next failing test says this:
 
 In order to fix this, handlers for `DELETE` and `GET` requests are needed.
 
-### 5. Add Support for handling a DELETE request on `/`
+### 6. Add Support for handling a DELETE request on `/`
 
 A request to delete data typically consists of a DELETE request. If the request is to delete a specific item, a URL encoded identifier is normally provided (eg. '/1' for the item with ID 1). If no identifier is provided, it is a request to delete all of the items.
 
@@ -315,7 +319,7 @@ func deleteAllHandler(completion: (RequestError?) -> Void ) {
 
 Build and run your application again, then reload SwaggerUI to see your new DELETE route. Expand the route and click "Try it out!" to delete the contents of the store. You should see a Response Body of "no content" and a Response Code of 204, indicating that the server successfully fulfilled the request.
 
-### 6. Add Support for handling a GET request on `/`
+### 7. Add Support for handling a GET request on `/`
 
 A request to load all of the stored data typically consists of a `GET` request with no data, which the server then handles and responds with an array of all the data in the store.
 
@@ -345,7 +349,7 @@ FAILED
 
 Refresh SwaggerUI again and view your new GET route. Clicking "Try it out!" will return the empty array (because you just restarted the application and the store is empty), but experiment with using the POST route to add ToDo items then viewing them by running the GET route again. REST APIs are easy!
 
-### 7. Add Support for handling a `GET` request on `/:id`
+### 8. Add Support for handling a `GET` request on `/:id`
 
 The next failing test is trying to load a specific ToDo item by making a `GET` request with the ID of the ToDo item that it wishes to retrieve, which is based on the ID in the `url` field of the ToDo item set when the item was stored by the earlier `POST` request. In the test above the reqest was for `GET /0` - a request for id 0.
 
@@ -380,7 +384,7 @@ FAILED
 
 Refresh SwaggerUI and experiment with using the POST route to create ToDo items, then using the GET route on `/{id}` to retrieve the stored items by ID.
 
-### 8. Add Support for handling a `PATCH` request on `/:id`
+### 9. Add Support for handling a `PATCH` request on `/:id`
 
 The failing test is trying to `PATCH` a specific ToDo item. A `PATCH` request updates an existing item by updating any fields sent as part of the `PATCH` request. This means that a field by field update needs to be done.
 
@@ -434,7 +438,7 @@ You should see a response code of 200 with a response body of:
 }
 ```
 
-### 9. Add Support for handling a DELETE request on `/:id`
+### 10. Add Support for handling a DELETE request on `/:id`
 
 The failing test is trying to `DELETE` a specific ToDo item. To fix this you need an additional route handler for `DELETE` that this time accepts an ID as a parameter.
 
@@ -460,23 +464,11 @@ All sixteen tests should now be passing!
 
 ### Congratulations, you've built a Kitura backend for the [Todo-Backend](https://www.todobackend.com) project!
 
-## Next Step
+## Next Steps
 
-### Try out the ToDo-Backend web client
+### 1. Try out the ToDo-Backend web client
 
 Now try visiting [https://todobackend.com/client/](https://todobackend.com/client/) in your browser to view the ToDo-Backend web client. Enter an API root of `http://localhost:8080/` and use the website to interact with your REST API. You can add, remove and update ToDo items as you wish.
 
-### Attach a database to your project
-Our [ORM tutorial](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md) builds upon the project created in this Workshop and replaces storing ToDos in an Array with a database running locally on your machine, using Swift-Kuery-ORM and PostgreSQL. 
-
-### An iOS application for the ToDo-Backend
-This tutorial has helped you build a ToDo-Backend for the web tests and web client from the [Todo-Backend](https://www.todobackend.com) project, but one of the great values of Swift is end to end development between iOS and the server. Clone the [iOSSampleKituraKit](https://github.com/IBM-Swift/iOSSampleKituraKit) repository and open the `iOSKituraKitSample.xcworkspace` to see an iOS app client for the ToDo-Backend project.
-
-   ```
-   cd ~
-   git clone https://github.com/IBM-Swift/iOSSampleKituraKit.git
-   cd iOSSampleKituraKit/KituraiOS
-   open iOSKituraKitSample.xcworkspace/
-   ```
-
-Run (`⌘+R`) the iOS application. You should be able to use the app to add, change and delete ToDo items!
+### 2. Attach a database to your project
+Our [ORM tutorial](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md) builds upon the project created in this Workshop and replaces storing ToDos in an Array with a database running locally on your machine, using an ORM (Object Relational Mapper) and PostgreSQL.

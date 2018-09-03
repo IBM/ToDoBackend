@@ -9,14 +9,17 @@
     <img src="http://swift-at-ibm-slack.mybluemix.net/badge.svg"  alt="Slack"> 
 </a>
 </p>
+In this self-paced tutorial you will:
 
-In this self-paced tutorial you will build a Kitura 2 application from scratch and create a REST API inside the application.
+- Build a Kitura application from scratch and create a REST API inside the application.
+- Add a PostgreSQL database to the application.
+- Build your application into a Docker image and deploy it to a Kubernetes cluster.
 
 The application you'll create is a "ToDo list" application, as described by the [Todo-Backend](http://todobackend.com/) project.
 
-You'll learn about server-side Swift, the Kitura framework, REST APIs, and OpenAPI.
+You'll learn about server-side Swift, the Kitura framework, REST APIs, OpenAPI, Docker and Kubernetes.
 
-At the end you should have a fully functioning application which passes a provided verification testsuite.
+At the end you should have a fully functioning application which passes a provided verification testsuite, running in Kubernetes.
 
 ## Prerequisites
 
@@ -58,12 +61,12 @@ You can choose whichever option you prefer.
 2. Install the app by opening the downloaded `Kitura.dmg` and dragging the app to your `Applications` folder.
 3. Ctrl-click the `Kitura` app in your `Applications` folder and choose "Open".
 
-The Kitura macOS app provides an easy point-and-click way to generate a new Kitura project. There are two templates: Skeleton and Starter.
+The Kitura macOS app provides an easy point-and-click way to generate a new Kitura project. There are three templates: Skeleton, Starter, and OpenAPI.
 
-1. Mouse over "Starter" and click "Create".
+1. Mouse over "" and click "Create".
 2. Navigate to the "ToDoBackend" folder in your home folder.
 3. Change the project name to "ToDoServer".
-3. Click "Create".
+4. Click "Create".
 
 The Kitura app will create a new Kitura project for you, ready to deploy to the cloud.
 
