@@ -317,7 +317,7 @@ func deleteAllHandler(completion: (RequestError?) -> Void ) {
 }
 ```
 
-Build and run your application again, then reload SwaggerUI to see your new DELETE route. Expand the route and click "Try it out!" to delete the contents of the store. You should see a Response Body of "no content" and a Response Code of 204, indicating that the server successfully fulfilled the request.
+Build and run your application again, then reload SwaggerUI to see your new DELETE route. Expand the route and click "Try it out!" to delete the contents of the store. You should see a Response Code of 204, indicating that the server successfully fulfilled the request.
 
 ### 7. Add Support for handling a GET request on `/`
 
