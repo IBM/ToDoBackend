@@ -63,7 +63,7 @@ You can choose whichever option you prefer.
 
 The Kitura macOS app provides an easy point-and-click way to generate a new Kitura project. There are three templates: Skeleton, Starter, and OpenAPI.
 
-1. Mouse over "" and click "Create".
+1. Mouse over "OpenAPI" and click "Create".
 2. Navigate to the "ToDoBackend" folder in your home folder.
 3. Change the project name to "ToDoServer".
 4. Click "Create".
