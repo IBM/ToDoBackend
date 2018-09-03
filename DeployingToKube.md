@@ -254,6 +254,7 @@ The final step is to open up the Docker for Desktop application preferences from
 
 Congratulations! We have learnt about Docker, Helm and Kubernetes and deployed our own releases to the local cluster. Here are some ideas you could explore to further your learning.
 
+* Set up [Monitoring in Kubernetes using Prometheus and Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md).
 * Update and reinstall your Helm chart so there are three replicas of Kitura running. This provides redundancy and adds horizontal scaling.
 * Add a `/crash` route to your Kitura application which simply calls `fatalError()`. Then rebuild, tag and deploy your Kitura application. When you access the `/crash` route the Kitura server will crash. Use `kubectl` to see how Kubernetes automatically restarts your failed application. This provides resiliency and failover! 
 * Push your Kitura image to Docker Hub (or another container registry) and have Helm pull your Kitura app from Docker Hub instead of using your local image. Using a container registry to store your deployment Docker images is best practice.
