@@ -239,6 +239,15 @@ helm delete --purge server
 helm delete --purge postgresql-database
 ```
 
+Deleting the Helm release of PostgreSQL won't actually delete the underlying database storage. To do this, you can run:
+
+```bash
+kubectl get pv
+kubectl delete pv <pv from above>
+kubectl get pvc
+kubectl delete pvc postgresql-database
+```
+
 We can now delete our local Docker images from the system to reclaim the lost hard drive space.
 
 ```bash
