@@ -49,7 +49,9 @@ Implementing a compliant ToDo Backend is an incremental task, with the aim being
     ```
 
 2. Run your Kitura server in Xcode:
-    1) Change the selected target from "ToDoServer-Package" to the "ToDoServer" executable. 2) Press the `Run` button or use the `⌘+R` key shortcut. 3) Select "Allow incoming network connections" if you are prompted.
+    1) Change the selected target from "ToDoServer-Package" to the "ToDoServer > MyMac". 
+    2) Press the `Run` button or use the `⌘+R` key shortcut. 
+    3) Select "Allow incoming network connections" if you are prompted.
 
 3. Check that some of the standard Kitura URLs are running:
     * Kitura splash screen: [http://localhost:8080/](http://localhost:8080/)
@@ -67,7 +69,7 @@ Kitura provides a package which makes it easy to add OpenAPI support to your app
 1. Open the `ToDoServer` > `Package.swift` file
 2. Add the following to the end of the dependencies section of the `Package.swift` file:
     ```swift
-        .package(url: "https://github.com/IBM-Swift/Kitura-OpenAPI.git", from: "1.0.0"),
+        .package(url: "https://github.com/IBM-Swift/Kitura-OpenAPI.git", from: "1.0.0")
     ```
 3. Update the target dependencies for the "Application" target to the following (note the lack of hyphen in KituraOpenAPI):
     ```swift
@@ -84,20 +86,21 @@ In order for Xcode to pick up the new dependency, the Xcode project now needs to
     open ToDoServer.xcodeproj
     ```
 
-Now we need to enable OpenAPI in our Kitura server.
+Now we need to check if OpenAPI is enabled in our Kitura server.
 
 1. Open the `Sources` > `Application` > `Application.swift` file
-2. Add an import for the KituraOpenAPI library to the start of the file:
+2. Check if there is an import for the KituraOpenAPI library to the start of the file:
    ```swift
    import KituraOpenAPI
    ```
-3. Add the following code into the end of the `postInit()` function after the call to `initializeHealthRoutes()`:  
+3. Make sure if there is the following code into the end of the `postInit()` function after the call to `initializeHealthRoutes()`:  
    ```swift
    KituraOpenAPI.addEndpoints(to: router)
    ```
 
 4. Re-run the server project in Xcode:
-    1) Edit the scheme again and select a Run Executable of "ToDoServer". 2) Run the project, then "Allow incoming network connections" if you are prompted.
+    1) Edit the scheme again and select a Run Executable of "ToDoServer". 
+    2) Run the project, then "Allow incoming network connections" if prompted.
 
 ### 3. Try out OpenAPI in Kitura
 
