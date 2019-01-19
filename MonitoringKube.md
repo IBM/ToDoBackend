@@ -4,7 +4,7 @@ Kitura uses the SwiftMetrics module to provide monitoring data, covering metrics
 
 SwiftMetrics provides APIs for accessing the monitoring data, as well as providing built-in integration with the Prometheus open source monitoring tool.
 
-Whilst Prometheus can be run anywhere, it is also designed to integrate easily in a Kuberneters enviroment, with pre-build configurations to collect data from both Prometheus compatible applications and from Kubernetes itself.
+Whilst Prometheus can be run anywhere, it is also designed to integrate easily in a Kubernetes enviroment, with pre-build configurations to collect data from both Prometheus compatible applications and from Kubernetes itself.
 
 ## Installing Prometheus into Kubernetes
 
