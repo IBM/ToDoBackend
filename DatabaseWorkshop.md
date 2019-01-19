@@ -31,8 +31,8 @@ Your `Package.swift` needs two new Packages for the PostgreSQL and ORM to work.
 1. Open the `ToDoServer` > `Package.swift` file in Xcode.
 2. Add the following two lines to the end of the dependencies section of the `Package.swift` file:
 ```swift
-.package(url: "https://github.com/IBM-Swift/Swift-Kuery-ORM", from: "0.3.1"),
-.package(url: "https://github.com/IBM-Swift/Swift-Kuery-PostgreSQL", from: "1.2.0"),
+.package(url: "https://github.com/IBM-Swift/Swift-Kuery-ORM", from: "0.4.1"),
+.package(url: "https://github.com/IBM-Swift/Swift-Kuery-PostgreSQL", from: "2.1.0"),
 ```
 3. Declare these new packages in the "Application" target (note the lack of hyphens):
 ```swift
@@ -75,7 +75,7 @@ Add the following code, to set up your database connection pool, to the end of t
 ```swift
 class Persistence {
 	static func setUp() {
-		let pool = PostgreSQLConnection.createPool(host: "localhost", port: 5432, options: [.databaseName("tododb")], poolOptions: ConnectionPoolOptions(initialCapacity: 10, maxCapacity: 50, timeout: 10000))
+		let pool = PostgreSQLConnection.createPool(host: "localhost", port: 5432, options: [.databaseName("tododb")], poolOptions: ConnectionPoolOptions(initialCapacity: 10, maxCapacity: 50))
 		Database.default = Database(pool)
 	}
 }
