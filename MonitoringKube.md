@@ -33,7 +33,7 @@ To build your first graph, type `os_cpu_used_ratio` into the **Expression** box 
 ![prometheus-graph](./resources/prometheus-graph.png)
 
 
-Whilst Prometheus provdes the ability to build simple graphs and alerts, Grafana is commonly used to build more sophisticated dashboards.
+Whilst Prometheus provides the ability to build simple graphs and alerts, Grafana is commonly used to build more sophisticated dashboards.
 
 ## Installing Grafana into Kubernetes
 
@@ -59,7 +59,7 @@ This should show the following screen:
 
 In order to connect Grafana to the Prometheus service, next click on **Add data source**.
 
-This opens the a panel that should be filled out with the following entries:
+This opens a panel that should be filled out with the following entries:
 
 * Name: `Prometheus`
 * Type: `Prometheus`
@@ -87,7 +87,7 @@ Set the **Prometheus** field to `Prometheus` and click **Import**.
 
 ![grafana-dashboard-import](./resources/grafana-dashboard-import.png)
 
-This will then open the dashboard, which will automatical start populating with data about your Kubernetes cluster.
+This will then open the dashboard, which will automatically start populating with data about your Kubernetes cluster.
 
 ![grafana-kube-dash](./resources/grafana-kube-dash.png)
 
