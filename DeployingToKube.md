@@ -64,7 +64,7 @@ We can now create a PostgreSQL release called `postgresql-database`.
 **Note**: Kubernetes and Helm are very specific on names, and calling your database anything else will result in later parts of the tutorial requiring tweaking.
 
 ```bash
-helm install --name postgresql-database --set postgresDatabase=tododb stable/postgresql
+helm install --name postgresql-database --set postgresDatabase=tododb stable/postgresql --version 0.17.0
 ```
 
 *The `--set` flag tells Helm to set some values during the `install` process. For PostgreSQL, we can specify a database we want created. We call that database `tododb` to match the name already in our Swift code from the last tutorial.*
