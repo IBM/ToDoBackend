@@ -40,7 +40,7 @@ Whilst Prometheus provides the ability to build simple graphs and alerts, Grafan
 Installing Grafana into Kubernetes can be done using its provided Helm chart:
 
 ```sh
-helm install stable/grafana --set adminPassword=PASSWORD --name grafana --namespace grafana
+helm install stable/grafana --set adminPassword=PASSWORD --name grafana --namespace grafana --version 1.14.3
 ```
 
 You can then run the following two commands in order to be able to connect to Grafana from your browser:
