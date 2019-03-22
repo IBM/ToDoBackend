@@ -64,7 +64,7 @@ We can now create a PostgreSQL release called `postgresql-database`.
 **Note**: Kubernetes and Helm are very specific on names, and calling your database anything else will result in later parts of the tutorial requiring tweaking.
 
 ```bash
-helm install --name postgresql-database --set postgresDatabase=tododb stable/postgresql
+helm install --name postgresql-database --set postgresqlDatabase=tododb stable/postgresql
 ```
 
 *The `--set` flag tells Helm to set some values during the `install` process. For PostgreSQL, we can specify a database we want created. We call that database `tododb` to match the name already in our Swift code from the last tutorial.*
@@ -157,7 +157,7 @@ Kubernetes stored the "secret" containing the database password when we made the
 In Xcode, use the project navigator to access chart > ToDoServer > `values.yaml`. At the bottom, add the following line to map our stored Kubernetes secret to a key we can use later.
 
 ```yaml
-secretsConfig: postgresql-database
+secretsConfig: postgresql-database-postgresql
 ```
 
 Now navigate into the `/deployment` folder and open up `deployment.yaml`. We need to add to the `env:` section, so we can access the password as an enviornment variable inside our Docker container. Add the following **below** the final value declared in `env:` but **above** the line `{{- if .Values.generatedBindings.enabled }}`. Make sure the indentation all matches up.
@@ -167,7 +167,7 @@ Now navigate into the `/deployment` folder and open up `deployment.yaml`. We nee
             valueFrom:
               secretKeyRef:
                 name: "{{ .Values.secretsConfig }}"
-                key: postgres-password
+                key: postgresql-password
 ```
 
 We are telling Helm to set an environment variable called `DBPASSWORD` to the data in the value part of a key:value pair keyed as `postgres-password`. The `.Values.secretsConfig` looks inside the `values.yaml`, finds the key `secretsConfig`, whose value is set to the secret stored in Kubernetes.
