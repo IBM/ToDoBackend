@@ -96,7 +96,7 @@ These changes will allow the Kitura server to access the database and write/read
 After these changes, your database connection should look like this:
 
 ```swift
-let pool = PostgreSQLConnection.createPool(host: "postgresql-database", port: 5432, options: [.databaseName("tododb"), .password(ProcessInfo.processInfo.environment["DBPASSWORD"] ?? "nil"), .userName("postgres")], poolOptions: ConnectionPoolOptions(initialCapacity: 10, maxCapacity: 50, timeout: 1000))
+let pool = PostgreSQLConnection.createPool(host: "postgresql-database", port: 5432, options: [.databaseName("tododb"), .password(ProcessInfo.processInfo.environment["DBPASSWORD"] ?? "nil"), .userName("postgres")], poolOptions: ConnectionPoolOptions(initialCapacity: 10, maxCapacity: 50))
 ```
 
 ## Docker
