@@ -274,7 +274,7 @@ Congratulations! We have learnt about Docker, Helm and Kubernetes and deployed o
 For live logs from a running pod, use
 
 ```
-kubectl log --timestamp=true --follow=true <POD-NAME>
+kubectl log --timestamps=true --follow=true <POD-NAME>
 ```
 
 This will create a streaming output of the logs created by the pod. This works well if you are having issues connecting to the database, for example. You could have logs from the database streaming as you access the todoserver on the port-forwarded port `8080`, and get realtime feedback on what the server is reporting.
