@@ -15,7 +15,7 @@
 1. [Build your Kitura app](https://github.com/IBM/ToDoBackend/blob/master/README.md)
 2. [Connect it to an SQL database](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
 3. [Build your app into a Docker image and deploy it on Kubernetes.](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
-**4. [Enable monitoring through Prometheus/Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md)**
+4. **[Enable monitoring through Prometheus/Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md)**
 
 # Monitoring the ToDoBackend in Kubernetes
 
