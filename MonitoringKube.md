@@ -1,3 +1,22 @@
+# Building a "ToDo" Backend with Kitura
+
+<p align="center">
+<img src="https://www.ibm.com/cloud-computing/bluemix/sites/default/files/assets/page/catalog-swift.svg" width="120" alt="Kitura Bird">
+</p>
+
+<p align="center">
+<a href= "http://swift-at-ibm-slack.mybluemix.net/">
+    <img src="http://swift-at-ibm-slack.mybluemix.net/badge.svg"  alt="Slack">
+</a>
+</p>
+
+## Workshop Table of Contents:
+
+1. [Build your Kitura app](https://github.com/IBM/ToDoBackend/blob/master/README.md)
+2. [Connect it to an SQL database](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
+3. [Build your app into a Docker image and deploy it on Kubernetes.](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+4. **[Enable monitoring through Prometheus/Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md)**
+
 # Monitoring the ToDoBackend in Kubernetes
 
 Kitura uses the SwiftMetrics module to provide monitoring data, covering metrics like CPU usage, memory usage and HTTP responsiveness.
@@ -107,10 +126,13 @@ You can create more complex queries and apply filters according to any kubernete
 
 * `http_request_duration_microseconds{kubernetes_name="todoserver-service"}`
 
-## Next Steps 🎉
+## Next Steps
+
 You now have integrated monitoring for both your Kubernetes cluster and your deployed Kitura application.
 
-Here are some ideas you could explore to further your learning.
+Congratulations!  You have completed the workshop!
+
+## Bonus Content
 
 * Add a Singlestat that shows how many instances of you Kitura application are currently running
-* Add a Singlestat that shows how many requests your Kitura app has responded to 
+* Add a Singlestat that shows how many requests your Kitura app has responded to

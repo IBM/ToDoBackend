@@ -1,3 +1,22 @@
+# Building a "ToDo" Backend with Kitura
+
+<p align="center">
+<img src="https://www.ibm.com/cloud-computing/bluemix/sites/default/files/assets/page/catalog-swift.svg" width="120" alt="Kitura Bird">
+</p>
+
+<p align="center">
+<a href= "http://swift-at-ibm-slack.mybluemix.net/">
+    <img src="http://swift-at-ibm-slack.mybluemix.net/badge.svg"  alt="Slack">
+</a>
+</p>
+
+## Workshop Table of Contents:
+
+1. [Build your Kitura app](https://github.com/IBM/ToDoBackend/blob/master/README.md)
+2. **[Connect it to an SQL database](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)**
+3. [Build your app into a Docker image and deploy it on Kubernetes.](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+4. [Enable monitoring through Prometheus/Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md)
+
 # Adding persistance to ToDoBackend with Swift-Kuery-ORM
 
 So far, our ToDoBackend has been storing, retrieving, deleting and updating "to do" items in a local in-memory `Array`.
@@ -7,6 +26,11 @@ Now we will show you how to use our ORM (Object Relational Mapping) library, cal
 ## Pre-Requisite
 
 This is a follow on tutorial to our [ToDoBackend tutorial](https://github.com/IBM/ToDoBackend). Please complete that before proceeding with this tutorial.
+
+**Homebrew** is also needed, to install Homebrew run the following Terminal command:
+```
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
 
 ## Installing PostgreSQL
 
@@ -27,7 +51,7 @@ createdb tododb
 ```
 
 ### 2. Updating Package.swift
-Your `Package.swift` needs two new Packages for the PostgreSQL and ORM to work. 
+Your `Package.swift` needs two new Packages for the PostgreSQL and ORM to work.
 1. Open the `ToDoServer` > `Package.swift` file in Xcode.
 2. Add the following two lines to the end of the dependencies section of the `Package.swift` file:
 ```swift
@@ -120,7 +144,7 @@ We will first update storeHandler() to use the database. Remove all of the code 
 ```
 This code is similar to the original but uses `todo.save(completion)` which saves the `todo` object to the database and then calls the method's completion handler.
 ### 8. deleteOne(), deleteAll(), getOne(), getAll()
-These methods are easy to update as their logic can happen with one call using the ORM! 
+These methods are easy to update as their logic can happen with one call using the ORM!
 ```swift
 	func deleteAllHandler(completion: @escaping (RequestError?) -> Void ) {
 		ToDo.deleteAll(completion)
@@ -129,11 +153,11 @@ These methods are easy to update as their logic can happen with one call using t
 	func deleteOneHandler(id: Int, completion: @escaping (RequestError?) -> Void ) {
 		ToDo.delete(id: id, completion)
 	}
-	
+
 	func getAllHandler(completion: @escaping ([ToDo]?, RequestError?) -> Void ) {
 		ToDo.findAll(completion)
 	}
-	
+
 	func getOneHandler(id: Int, completion: @escaping(ToDo?, RequestError?) -> Void ) {
 		ToDo.find(id: id, completion)
 	}
@@ -151,27 +175,27 @@ This method is a little more complex as we need to fetch the `ToDo` object tha
 			if error != nil {
 				return completion(nil, .notFound)
 			}
-			
+
 			guard var oldToDo = preExistingToDo else {
 				return completion(nil, .notFound)
 			}
-			
+
 			guard let id = oldToDo.id else {
 				return completion(nil, .internalServerError)
 			}
-			
+
 			oldToDo.user = new.user ?? oldToDo.user
 			oldToDo.order = new.order ?? oldToDo.order
 			oldToDo.title = new.title ?? oldToDo.title
 			oldToDo.completed = new.completed ?? oldToDo.completed
-			
+
 			oldToDo.update(id: id, completion)
-			
+
 		}
 	}
 ```
 
-Again, the logic is similar to before but with some added error handling for fetching from the database in case the `id` doesn't exist. 
+Again, the logic is similar to before but with some added error handling for fetching from the database in case the `id` doesn't exist.
 
 ### 10. Remove the todoStore property
 
@@ -196,4 +220,6 @@ SELECT * FROM "ToDos";
 
 Congratulations! We have removed the project's dependency on a non-persistent storage option and updated it to use a persistent and accessible database, using Swift 4's Codable feature along side our ORM to maintain our ToDo type.
 
-**Ready to learn about Docker and Kubernetes? [This guide](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md) will take you, step-by-step, through setting up a Kubernetes cluster using Docker for Desktop, building a Docker image of your Kitura app, and deploying releases using both remote and local Helm charts.**
+## Next Steps
+
+Ready to learn about Docker and Kubernetes? [This guide](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md) will take you, step-by-step, through setting up a Kubernetes cluster using Docker for Desktop, building a Docker image of your Kitura app, and deploying releases using both remote and local Helm charts.

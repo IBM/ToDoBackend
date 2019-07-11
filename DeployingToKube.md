@@ -1,3 +1,22 @@
+# Building a "ToDo" Backend with Kitura
+
+<p align="center">
+<img src="https://www.ibm.com/cloud-computing/bluemix/sites/default/files/assets/page/catalog-swift.svg" width="120" alt="Kitura Bird">
+</p>
+
+<p align="center">
+<a href= "http://swift-at-ibm-slack.mybluemix.net/">
+    <img src="http://swift-at-ibm-slack.mybluemix.net/badge.svg"  alt="Slack">
+</a>
+</p>
+
+## Workshop Table of Contents:
+
+1. [Build your Kitura app](https://github.com/IBM/ToDoBackend/blob/master/README.md)
+2. [Connect it to an SQL database](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
+3. **[Build your app into a Docker image and deploy it on Kubernetes.](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)**
+4. [Enable monitoring through Prometheus/Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md)
+
 # Deploying to Kubernetes using Docker and Helm
 
 Everything we have built so far has run locally on macOS. Using the built in Kubernetes support inside Docker for Desktop, we can deploy to Linux containers instead, using the Helm package manager.
@@ -42,7 +61,7 @@ In this section you will learn about:
 
 Our application is going to consist of two "pods" (Kubernetes Pods, not CocoaPods). In Kubernetes, a pod is typically one running Docker container, although a pod can contain multiple containers in some more complex scenarios.
 
-We are going to run two pods: one for the database and one for the Kitura server. We will start by deploying PostgreSQL to your Kubernetes cluster using a Helm chart. 
+We are going to run two pods: one for the database and one for the Kitura server. We will start by deploying PostgreSQL to your Kubernetes cluster using a Helm chart.
 
 **Note:** A Helm chart `install` to Kubernetes is called a **release**.
 
@@ -57,9 +76,9 @@ helm init #Initialises Helm on our newly created Kubernetes cluster
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 ```
 
-### Creating the release 
+### Creating the release
 
-We can now create a PostgreSQL release called `postgresql-database`. 
+We can now create a PostgreSQL release called `postgresql-database`.
 
 **Note**: Kubernetes and Helm are very specific on names, and calling your database anything else will result in later parts of the tutorial requiring tweaking.
 
@@ -152,7 +171,7 @@ Now our `server-run` Docker image contains our executable which can be deployed 
 
 ## Shhhh... secrets 🤫 (and how to access them)
 
-Kubernetes stored the "secret" containing the database password when we made the PostgreSQL release. We now need to expose that secret to our Kitura application in the `DBPASSWD` environment variable. 
+Kubernetes stored the "secret" containing the database password when we made the PostgreSQL release. We now need to expose that secret to our Kitura application in the `DBPASSWD` environment variable.
 
 In Xcode, use the project navigator to access chart > ToDoServer > `values.yaml`. At the bottom, add the following line to map our stored Kubernetes secret to a key we can use later.
 
@@ -160,7 +179,7 @@ In Xcode, use the project navigator to access chart > ToDoServer > `values.yaml`
 secretsConfig: postgresql-database
 ```
 
-Now navigate into the `/templates` folder and open up `deployment.yaml`. We need to add to the `env:` section, so we can access the password as an enviornment variable inside our Docker container. Add the following **below** the final value declared in `env:` but **above** the line `{{- if .Values.generatedBindings.enabled }}`. Make sure the indentation all matches up.
+Now navigate into the `/templates` folder and open up `deployment.yaml`. We need to add to the `env:` section, so we can access the password as an environment variable inside our Docker container. Add the following **below** the final value declared in `env:` but **above** the line `{{- if .Values.generatedBindings.enabled }}`. Make sure the indentation all matches up.
 
 ```
           - name: DBPASSWORD
@@ -185,7 +204,7 @@ In this section you will learn about:
 
 First we must edit the Helm chart to point to our local, tagged `server-run` image. Using Xcode's left sidebar, navigate to `chart` > `ToDoServer` > `values.yaml`.
 
-This acts like a blueprint for Helm to use when deploying our application to Kubernetes. We need to modify the `repository`, `tag` and `pullPolicy` lines (towards the top of the file). 
+This acts like a blueprint for Helm to use when deploying our application to Kubernetes. We need to modify the `repository`, `tag` and `pullPolicy` lines (towards the top of the file).
 
 **Caution:** make sure your indentation is consistent with the rest of the file, and YAML does not support tabs so use spaces instead!
 
@@ -224,13 +243,28 @@ Now try `GET /` and the response should `200` and the Response Body should conta
 
 You can also reload the TodoBackend test-suite web page and check that all the tests still pass.
 
-## Cleaning up
+## Next Steps
+
+Congratulations! We have learnt about Docker, Helm and Kubernetes and deployed our own releases to the local cluster.
+
+Set up [Monitoring in Kubernetes using Prometheus and Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md).
+
+## Bonus Content
+
+* Update and reinstall your Helm chart so there are three replicas of Kitura running. This provides redundancy and adds horizontal scaling.
+* Add a `/crash` route to your Kitura application which simply calls `fatalError()`. Then rebuild, tag and deploy your Kitura application. When you access the `/crash` route the Kitura server will crash. Use `kubectl` to see how Kubernetes automatically restarts your failed application. This provides resiliency and failover!
+* Push your Kitura image to Docker Hub (or another container registry) and have Helm pull your Kitura app from Docker Hub instead of using your local image. Using a container registry to store your deployment Docker images is best practice.
+* Deploy your Kitura app to the IBM Kubernetes Service on IBM Cloud. Many public cloud providers offer managed Kubernetes services. IBM Cloud offers a free tier so you can try out Kubernetes in the cloud for free!
+
+### Cleaning up
 
 Finally, we will:
 
 - Delete Helm releases
 - Delete local Docker images
 - Turn off your local Kubernetes cluster
+
+**CAUTION! DO NOT DO THIS IF YOU ARE PROCEEDING TO THE NEXT SECTION, OTHERWISE YOU WILL NEED TO REDEPLOY!**
 
 We have a few things that are taking up disk space, including about 2.4GB of Docker images, as well as a running cluster which is using system resources. To clean up your system, start by deleting both the database and the Kitura server from the Kubernetes cluster.
 
@@ -259,17 +293,7 @@ We have now stopped the releases running in the Kubernetes cluster, and deleted 
 
 The final step is to open up the Docker for Desktop application preferences from the Docker Menubar icon and uncheck the `Enable Kubernetes` box under the `Kubernete`s tab. This stops your local cluster from running.
 
-## Next Steps 🎉
-
-Congratulations! We have learnt about Docker, Helm and Kubernetes and deployed our own releases to the local cluster. Here are some ideas you could explore to further your learning.
-
-* Set up [Monitoring in Kubernetes using Prometheus and Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md).
-* Update and reinstall your Helm chart so there are three replicas of Kitura running. This provides redundancy and adds horizontal scaling.
-* Add a `/crash` route to your Kitura application which simply calls `fatalError()`. Then rebuild, tag and deploy your Kitura application. When you access the `/crash` route the Kitura server will crash. Use `kubectl` to see how Kubernetes automatically restarts your failed application. This provides resiliency and failover! 
-* Push your Kitura image to Docker Hub (or another container registry) and have Helm pull your Kitura app from Docker Hub instead of using your local image. Using a container registry to store your deployment Docker images is best practice.
-* Deploy your Kitura app to the IBM Kubernetes Service on IBM Cloud. Many public cloud providers offer managed Kubernetes services. IBM Cloud offers a free tier so you can try out Kubernetes in the cloud for free!
-
-## Appendix: Tips for Kubernetes and Helm
+### Appendix: Tips for Kubernetes and Helm
 
 For live logs from a running pod, use
 
@@ -287,4 +311,3 @@ helm delete --purge RELEASE-NAME
 ```
 
 Without including `--purge`, the name of the instance is not freed and if you ran `helm install` again using the same name, you could recieve an error.
-
