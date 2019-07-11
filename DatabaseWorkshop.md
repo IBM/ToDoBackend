@@ -220,4 +220,6 @@ SELECT * FROM "ToDos";
 
 Congratulations! We have removed the project's dependency on a non-persistent storage option and updated it to use a persistent and accessible database, using Swift 4's Codable feature along side our ORM to maintain our ToDo type.
 
-**Ready to learn about Docker and Kubernetes? [This guide](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md) will take you, step-by-step, through setting up a Kubernetes cluster using Docker for Desktop, building a Docker image of your Kitura app, and deploying releases using both remote and local Helm charts.**
+## Next Steps
+
+Ready to learn about Docker and Kubernetes? [This guide](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md) will take you, step-by-step, through setting up a Kubernetes cluster using Docker for Desktop, building a Docker image of your Kitura app, and deploying releases using both remote and local Helm charts.

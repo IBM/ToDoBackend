@@ -243,17 +243,20 @@ Now try `GET /` and the response should `200` and the Response Body should conta
 
 You can also reload the TodoBackend test-suite web page and check that all the tests still pass.
 
-## Next Steps 🎉
+## Next Steps
 
-Congratulations! We have learnt about Docker, Helm and Kubernetes and deployed our own releases to the local cluster. Here are some ideas you could explore to further your learning.
+Congratulations! We have learnt about Docker, Helm and Kubernetes and deployed our own releases to the local cluster.
 
-* Set up [Monitoring in Kubernetes using Prometheus and Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md).
+Set up [Monitoring in Kubernetes using Prometheus and Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md).
+
+## Bonus Content
+
 * Update and reinstall your Helm chart so there are three replicas of Kitura running. This provides redundancy and adds horizontal scaling.
 * Add a `/crash` route to your Kitura application which simply calls `fatalError()`. Then rebuild, tag and deploy your Kitura application. When you access the `/crash` route the Kitura server will crash. Use `kubectl` to see how Kubernetes automatically restarts your failed application. This provides resiliency and failover!
 * Push your Kitura image to Docker Hub (or another container registry) and have Helm pull your Kitura app from Docker Hub instead of using your local image. Using a container registry to store your deployment Docker images is best practice.
 * Deploy your Kitura app to the IBM Kubernetes Service on IBM Cloud. Many public cloud providers offer managed Kubernetes services. IBM Cloud offers a free tier so you can try out Kubernetes in the cloud for free!
 
-## Cleaning up
+### Cleaning up
 
 Finally, we will:
 
@@ -290,7 +293,7 @@ We have now stopped the releases running in the Kubernetes cluster, and deleted 
 
 The final step is to open up the Docker for Desktop application preferences from the Docker Menubar icon and uncheck the `Enable Kubernetes` box under the `Kubernete`s tab. This stops your local cluster from running.
 
-## Appendix: Tips for Kubernetes and Helm
+### Appendix: Tips for Kubernetes and Helm
 
 For live logs from a running pod, use
 

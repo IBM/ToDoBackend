@@ -476,9 +476,11 @@ All sixteen tests should now be passing!
 
 ## Next Steps
 
-### 1. Try out the ToDo-Backend web client
+### Attach a database to your project
+Our [ORM tutorial](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md) builds upon the project created in this Workshop and replaces storing ToDos in an Array with a database running locally on your machine, using an ORM (Object Relational Mapper) and PostgreSQL.
+
+## Bonus Content
+
+### Try out the ToDo-Backend web client
 
 Now try visiting [https://todobackend.com/client/](https://todobackend.com/client/) in your browser to view the ToDo-Backend web client. Enter an API root of `http://localhost:8080/` and use the website to interact with your REST API. You can add, remove and update ToDo items as you wish.
-
-### 2. Attach a database to your project
-Our [ORM tutorial](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md) builds upon the project created in this Workshop and replaces storing ToDos in an Array with a database running locally on your machine, using an ORM (Object Relational Mapper) and PostgreSQL.

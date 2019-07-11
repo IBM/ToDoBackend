@@ -126,10 +126,11 @@ You can create more complex queries and apply filters according to any kubernete
 
 * `http_request_duration_microseconds{kubernetes_name="todoserver-service"}`
 
-## Next Steps 🎉
+## Next Steps
+
 You now have integrated monitoring for both your Kubernetes cluster and your deployed Kitura application.
 
-Here are some ideas you could explore to further your learning.
+## Bonus Content
 
 * Add a Singlestat that shows how many instances of you Kitura application are currently running
 * Add a Singlestat that shows how many requests your Kitura app has responded to
