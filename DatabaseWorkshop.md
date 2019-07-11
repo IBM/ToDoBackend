@@ -13,9 +13,9 @@
 ## Workshop Table of Contents:
 
 1. [Build your Kitura app](https://github.com/IBM/ToDoBackend/blob/master/README.md)
-2. [Connect it to an SQL database](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
+**2. [Connect it to an SQL database](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)**
 3. [Build your app into a Docker image and deploy it on Kubernetes.](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
-4. [Enable monitoring through Prometheus/Graphana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md)
+4. [Enable monitoring through Prometheus/Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md)
 
 # Adding persistance to ToDoBackend with Swift-Kuery-ORM
 
@@ -27,7 +27,7 @@ Now we will show you how to use our ORM (Object Relational Mapping) library, cal
 
 This is a follow on tutorial to our [ToDoBackend tutorial](https://github.com/IBM/ToDoBackend). Please complete that before proceeding with this tutorial.
 
-**Homebrew** is also needed, to install homebrew paste this into your terminal and hit Enter:
+**Homebrew** is also needed, to install Homebrew run the following Terminal command:
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
