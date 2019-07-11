@@ -261,7 +261,7 @@ Finally, we will:
 - Delete local Docker images
 - Turn off your local Kubernetes cluster
 
-**CAUTION! DO NOT DO THIS IF YOU ARE PROCEEDING TO THE NEXT SECTION! (Monitoring Kubernetes) otherwise you will need to redeploy! But it is important to turn off your local Kubernetes cluster when you are done with a session**
+**CAUTION! DO NOT DO THIS IF YOU ARE PROCEEDING TO THE NEXT SECTION, OTHERWISE YOU WILL NEED TO REDEPLOY!**
 
 We have a few things that are taking up disk space, including about 2.4GB of Docker images, as well as a running cluster which is using system resources. To clean up your system, start by deleting both the database and the Kitura server from the Kubernetes cluster.
 
