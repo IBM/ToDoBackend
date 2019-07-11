@@ -5,10 +5,17 @@
 </p>
 
 <p align="center">
-<a href= "http://swift-at-ibm-slack.mybluemix.net/"> 
-    <img src="http://swift-at-ibm-slack.mybluemix.net/badge.svg"  alt="Slack"> 
+<a href= "http://swift-at-ibm-slack.mybluemix.net/">
+    <img src="http://swift-at-ibm-slack.mybluemix.net/badge.svg"  alt="Slack">
 </a>
 </p>
+
+# Workshop Table of Contents:
+
+1. [Build your Kitura app](#https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+2. [Connect it to a SQL database](#https://github.com/IBM/ToDoBackend/blob/master/Workshop.md)
+3. [Build your app into a Docker image and deploy it on Kubernetes.](#https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
+4. [Enable monitoring through Prometheus/Graphana](#https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
 
 ## Run the tests
 In order to implement a ToDo Backend, a server is required that provides support for storing, retrieving, deleting and updating "to do" items. The ToDoBackend project doesn't provide a specification for how the server must respond, rather it provides a set of tests which the server must pass. The "todo-backend-js-spec" project provides those tests.
@@ -24,7 +31,7 @@ All the tests should fail. The first error reported should be as follows:
 :x: `the api root responds to a GET (i.e. the server is up and accessible, CORS headers are set up)`
 
 ```
-AssertionError: expected promise to be fulfilled but it was rejected with [Error: 
+AssertionError: expected promise to be fulfilled but it was rejected with [Error:
 
 GET http://localhost:8080/
 FAILED
@@ -42,15 +49,15 @@ Implementing a compliant ToDo Backend is an incremental task, with the aim being
 
 ### 1. Run your Kitura server
 
-1. Open the ToDoServer project in Xcode. 
+1. Open the ToDoServer project in Xcode.
     ```
     cd ~/ToDoBackend/ToDoServer  
     open ToDoServer.xcodeproj
     ```
 
 2. Run your Kitura server in Xcode:
-    1) Change the selected target from "ToDoServer-Package" to the "ToDoServer > MyMac". 
-    2) Press the `Run` button or use the `⌘+R` key shortcut. 
+    1) Change the selected target from "ToDoServer-Package" to the "ToDoServer > MyMac".
+    2) Press the `Run` button or use the `⌘+R` key shortcut.
     3) Select "Allow incoming network connections" if you are prompted.
 
 3. Check that some of the standard Kitura URLs are running:
@@ -99,7 +106,7 @@ Now we need to check if OpenAPI is enabled in our Kitura server.
    ```
 
 4. Re-run the server project in Xcode:
-    1) Edit the scheme again and select a Run Executable of "ToDoServer". 
+    1) Edit the scheme again and select a Run Executable of "ToDoServer".
     2) Run the project, then "Allow incoming network connections" if prompted.
 
 ### 3. Try out OpenAPI in Kitura
@@ -131,7 +138,7 @@ The first test should still fail with the following:
 :x: `the api root responds to a GET (i.e. the server is up and accessible, CORS headers are set up)`
 
 ```
-AssertionError: expected promise to be fulfilled but it was rejected with [Error: 
+AssertionError: expected promise to be fulfilled but it was rejected with [Error:
 
 GET http://localhost:8080
 FAILED
@@ -184,7 +191,7 @@ Now we need to enable CORS in our Kitura server.
 4. Re-run the server project in Xcode  
     1) Edit the scheme again and select a Run Executable of "ToDoServer". 2) Run the project, then "Allow incoming network connections" if you are prompted.
 
-5. Re-run the tests by reloading the test page in your web browser. 
+5. Re-run the tests by reloading the test page in your web browser.
 
 The first test should now be passing!  But the second test is failing:
 
@@ -212,7 +219,7 @@ A request to store data typically consists of a POST request with the data to be
        public var order: Int?
        public var completed: Bool?
        public var url: String?
-       
+
        public static func ==(lhs: ToDo, rhs: ToDo) -> Bool {
            return (lhs.title == rhs.title) && (lhs.user == rhs.user) && (lhs.order == rhs.order) && (lhs.completed == rhs.completed) && (lhs.url == rhs.url) && (lhs.id == rhs.id)
        }
@@ -267,7 +274,7 @@ A request to store data typically consists of a POST request with the data to be
    This expects to receive a ToDo struct from the request, sets `completed` to false if it is `nil` and adds a `url` value that informs the client how to retrieve this ToDo item in the future.  
    The handler then returns the updated ToDo item to the client.
 
-4.  Run the project and rerun the tests by reloading the test page in the browser. 
+4.  Run the project and rerun the tests by reloading the test page in the browser.
 
 The first three tests should now pass.
 
@@ -338,7 +345,7 @@ A request to load all of the stored data typically consists of a `GET` request w
         completion(todoStore, nil)
     }
    ```
-3.  Run the project and re-run the tests by reloading the test page in the browser. 
+3.  Run the project and re-run the tests by reloading the test page in the browser.
 
 The first seven tests should now pass, with the eighth test failing:  
 :x: `each new todo has a url, which returns a todo`
@@ -373,7 +380,7 @@ Kitura's Codable Routing is able to automatically convert identifiers used in th
     }
     ```
 
-3.  Run the project and re-run the tests by reloading the test page in the browser. 
+3.  Run the project and re-run the tests by reloading the test page in the browser.
 
 The first nine tests now pass. The tenth fails with the following:  
 :x: `can change the todo's title by PATCHing to the todo's url`  
@@ -412,7 +419,7 @@ The failing test is trying to `PATCH` a specific ToDo item. A `PATCH` request up
         completion(current, nil)
     }
    ```
-3.  Run the project and rerun the tests by reloading the test page in the browser. 
+3.  Run the project and rerun the tests by reloading the test page in the browser.
 
 Twelve tests should now be passing, with the thirteenth failing as follows:
 :x: `can delete a todo making a DELETE request to the todo's url`
@@ -461,7 +468,7 @@ The failing test is trying to `DELETE` a specific ToDo item. To fix this you nee
         completion(nil)
     }
    ```
-3.  Run the project and rerun the tests by reloading the test page in the browser. 
+3.  Run the project and rerun the tests by reloading the test page in the browser.
 
 All sixteen tests should now be passing!
 

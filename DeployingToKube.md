@@ -1,3 +1,10 @@
+# Workshop Table of Contents:
+
+1. [Build your Kitura app](#https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+2. [Connect it to a SQL database](#https://github.com/IBM/ToDoBackend/blob/master/Workshop.md)
+3. [Build your app into a Docker image and deploy it on Kubernetes.](#https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
+4. [Enable monitoring through Prometheus/Graphana](#https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+
 # Deploying to Kubernetes using Docker and Helm
 
 Everything we have built so far has run locally on macOS. Using the built in Kubernetes support inside Docker for Desktop, we can deploy to Linux containers instead, using the Helm package manager.
@@ -42,7 +49,7 @@ In this section you will learn about:
 
 Our application is going to consist of two "pods" (Kubernetes Pods, not CocoaPods). In Kubernetes, a pod is typically one running Docker container, although a pod can contain multiple containers in some more complex scenarios.
 
-We are going to run two pods: one for the database and one for the Kitura server. We will start by deploying PostgreSQL to your Kubernetes cluster using a Helm chart. 
+We are going to run two pods: one for the database and one for the Kitura server. We will start by deploying PostgreSQL to your Kubernetes cluster using a Helm chart.
 
 **Note:** A Helm chart `install` to Kubernetes is called a **release**.
 
@@ -57,9 +64,9 @@ helm init #Initialises Helm on our newly created Kubernetes cluster
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 ```
 
-### Creating the release 
+### Creating the release
 
-We can now create a PostgreSQL release called `postgresql-database`. 
+We can now create a PostgreSQL release called `postgresql-database`.
 
 **Note**: Kubernetes and Helm are very specific on names, and calling your database anything else will result in later parts of the tutorial requiring tweaking.
 
@@ -152,7 +159,7 @@ Now our `server-run` Docker image contains our executable which can be deployed 
 
 ## Shhhh... secrets 🤫 (and how to access them)
 
-Kubernetes stored the "secret" containing the database password when we made the PostgreSQL release. We now need to expose that secret to our Kitura application in the `DBPASSWD` environment variable. 
+Kubernetes stored the "secret" containing the database password when we made the PostgreSQL release. We now need to expose that secret to our Kitura application in the `DBPASSWD` environment variable.
 
 In Xcode, use the project navigator to access chart > ToDoServer > `values.yaml`. At the bottom, add the following line to map our stored Kubernetes secret to a key we can use later.
 
@@ -185,7 +192,7 @@ In this section you will learn about:
 
 First we must edit the Helm chart to point to our local, tagged `server-run` image. Using Xcode's left sidebar, navigate to `chart` > `ToDoServer` > `values.yaml`.
 
-This acts like a blueprint for Helm to use when deploying our application to Kubernetes. We need to modify the `repository`, `tag` and `pullPolicy` lines (towards the top of the file). 
+This acts like a blueprint for Helm to use when deploying our application to Kubernetes. We need to modify the `repository`, `tag` and `pullPolicy` lines (towards the top of the file).
 
 **Caution:** make sure your indentation is consistent with the rest of the file, and YAML does not support tabs so use spaces instead!
 
@@ -265,7 +272,7 @@ Congratulations! We have learnt about Docker, Helm and Kubernetes and deployed o
 
 * Set up [Monitoring in Kubernetes using Prometheus and Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md).
 * Update and reinstall your Helm chart so there are three replicas of Kitura running. This provides redundancy and adds horizontal scaling.
-* Add a `/crash` route to your Kitura application which simply calls `fatalError()`. Then rebuild, tag and deploy your Kitura application. When you access the `/crash` route the Kitura server will crash. Use `kubectl` to see how Kubernetes automatically restarts your failed application. This provides resiliency and failover! 
+* Add a `/crash` route to your Kitura application which simply calls `fatalError()`. Then rebuild, tag and deploy your Kitura application. When you access the `/crash` route the Kitura server will crash. Use `kubectl` to see how Kubernetes automatically restarts your failed application. This provides resiliency and failover!
 * Push your Kitura image to Docker Hub (or another container registry) and have Helm pull your Kitura app from Docker Hub instead of using your local image. Using a container registry to store your deployment Docker images is best practice.
 * Deploy your Kitura app to the IBM Kubernetes Service on IBM Cloud. Many public cloud providers offer managed Kubernetes services. IBM Cloud offers a free tier so you can try out Kubernetes in the cloud for free!
 
@@ -287,4 +294,3 @@ helm delete --purge RELEASE-NAME
 ```
 
 Without including `--purge`, the name of the instance is not freed and if you ran `helm install` again using the same name, you could recieve an error.
-

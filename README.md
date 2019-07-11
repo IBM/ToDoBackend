@@ -5,15 +5,17 @@
 </p>
 
 <p align="center">
-<a href= "http://swift-at-ibm-slack.mybluemix.net/"> 
-    <img src="http://swift-at-ibm-slack.mybluemix.net/badge.svg"  alt="Slack"> 
+<a href= "http://swift-at-ibm-slack.mybluemix.net/">
+    <img src="http://swift-at-ibm-slack.mybluemix.net/badge.svg"  alt="Slack">
 </a>
 </p>
-In this self-paced tutorial you will:
 
-- Build a Kitura application from scratch and create a REST API inside the application.
-- Add a PostgreSQL database to the application.
-- Build your application into a Docker image and deploy it to a Kubernetes cluster.
+# Workshop Table of Contents:
+
+1. [Build your Kitura app](#https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+2. [Connect it to a SQL database](#https://github.com/IBM/ToDoBackend/blob/master/Workshop.md)
+3. [Build your app into a Docker image and deploy it on Kubernetes.](#https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
+4. [Enable monitoring through Prometheus/Graphana](#https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
 
 The application you'll create is a "ToDo list" application, as described by the [Todo-Backend](http://todobackend.com/) project.
 
@@ -31,14 +33,7 @@ Before getting started, make sure you have the following prerequisites installed
 
 ## Setting up
 
-Start by cloning this repository to your system:
-
-```
-cd ~
-git clone https://github.com/IBM/ToDoBackend.git
-```
-
-Then, clone the testsuite you'll be using to verify your REST API:
+Start by cloning this repository to your system, this is the testsuite you'll be using to verify your REST API:
 
 ```
 cd ~
@@ -90,54 +85,5 @@ kitura init
 ```
 
 This creates a fully working Kitura project that provides monitoring and metrics which can then be extended with your application logic.
-
-Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
-
-### Option 3: Create your Kitura starter kit in IBM Cloud
-
-1. Start by visiting [IBM Cloud](https://console.bluemix.net) in your web browser.
-2. If you already have a free IBM Cloud account, skip to the next step. Otherwise, click "Create a free Account", complete the form, and click "Create Account". Confirm your account by accessing your email and clicking "Confirm Account" in the email you are sent.
-3. Log in to IBM Cloud with your credentials.
-
-A starter kit is a pre-configured application template that allows you to deploy a production-ready application to IBM Cloud within minutes.
-
-Code generation technology creates an application in your preferred language and framework, which can be tailored to your needs and use case. Any services that are required in support of the use case are provisioned automatically.
-
-You can debug and test on your local workstation or in the cloud, and then
-use a DevOps toolchain to automate the delivery process.
-
-1. In the IBM Cloud dashboard, click the top left "hamburger" icon to open the navigation menu, then choose "Apple Development". This opens the IBM Apple Developer Service.
-2. Click "Starter Kits" in the left menu.
-3. Click "Create App".
-4. Name your project "ToDoServer".
-5. Under "Select your language" choose "Swift" so that a server-side Swift app is created.
-6. Click the "Create" button on the right hand side to create your app.
-
-The app details view is now displayed where you could configure your app, add services, and more.
-
-1. Click the "Download Code" button on the top right to download your Kitura starter kit application in a zip file.
-
-Your browser may automatically unzip the file for you. If it does not, unzip your app and copy it to the workshop location as follows:
-
-```
-cd ~/Downloads
-mkdir ToDoServer
-unzip -d ToDoServer <filename>.zip  # <filename>.zip was downloaded from IBM Cloud
-cp -R ToDoServer ~/ToDoBackend/ToDoServer
-```
-
-If it is already unzipped, just copy the files to the workshop location:
-
-```
-cd ~/Downloads
-cp -R <foldername> ~/ToDoBackend/ToDoServer
-```
-
-Now change to your project folder and generate an Xcode project for the rest of the workshop:
-
-```
-cd ~/ToDoBackend/ToDoServer
-swift package generate-xcodeproj
-```
 
 Congratulations, you have created your first Kitura application. Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
