@@ -243,6 +243,16 @@ Now try `GET /` and the response should `200` and the Response Body should conta
 
 You can also reload the TodoBackend test-suite web page and check that all the tests still pass.
 
+## Next Steps 🎉
+
+Congratulations! We have learnt about Docker, Helm and Kubernetes and deployed our own releases to the local cluster. Here are some ideas you could explore to further your learning.
+
+* Set up [Monitoring in Kubernetes using Prometheus and Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md).
+* Update and reinstall your Helm chart so there are three replicas of Kitura running. This provides redundancy and adds horizontal scaling.
+* Add a `/crash` route to your Kitura application which simply calls `fatalError()`. Then rebuild, tag and deploy your Kitura application. When you access the `/crash` route the Kitura server will crash. Use `kubectl` to see how Kubernetes automatically restarts your failed application. This provides resiliency and failover!
+* Push your Kitura image to Docker Hub (or another container registry) and have Helm pull your Kitura app from Docker Hub instead of using your local image. Using a container registry to store your deployment Docker images is best practice.
+* Deploy your Kitura app to the IBM Kubernetes Service on IBM Cloud. Many public cloud providers offer managed Kubernetes services. IBM Cloud offers a free tier so you can try out Kubernetes in the cloud for free!
+
 ## Cleaning up
 
 Finally, we will:
@@ -250,6 +260,8 @@ Finally, we will:
 - Delete Helm releases
 - Delete local Docker images
 - Turn off your local Kubernetes cluster
+
+**CAUTION! DO NOT DO THIS IF YOU ARE PROCEEDING TO THE NEXT SECTION! (Monitoring Kubernetes) otherwise you will need to redeploy! But it is important to turn off your local Kubernetes cluster when you are done with a session**
 
 We have a few things that are taking up disk space, including about 2.4GB of Docker images, as well as a running cluster which is using system resources. To clean up your system, start by deleting both the database and the Kitura server from the Kubernetes cluster.
 
@@ -277,16 +289,6 @@ docker image rm -f IMAGE-ID #Repeat on the IMAGE ID of both your run and build i
 We have now stopped the releases running in the Kubernetes cluster, and deleted their respective Docker images from the system.
 
 The final step is to open up the Docker for Desktop application preferences from the Docker Menubar icon and uncheck the `Enable Kubernetes` box under the `Kubernete`s tab. This stops your local cluster from running.
-
-## Next Steps 🎉
-
-Congratulations! We have learnt about Docker, Helm and Kubernetes and deployed our own releases to the local cluster. Here are some ideas you could explore to further your learning.
-
-* Set up [Monitoring in Kubernetes using Prometheus and Grafana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md).
-* Update and reinstall your Helm chart so there are three replicas of Kitura running. This provides redundancy and adds horizontal scaling.
-* Add a `/crash` route to your Kitura application which simply calls `fatalError()`. Then rebuild, tag and deploy your Kitura application. When you access the `/crash` route the Kitura server will crash. Use `kubectl` to see how Kubernetes automatically restarts your failed application. This provides resiliency and failover!
-* Push your Kitura image to Docker Hub (or another container registry) and have Helm pull your Kitura app from Docker Hub instead of using your local image. Using a container registry to store your deployment Docker images is best practice.
-* Deploy your Kitura app to the IBM Kubernetes Service on IBM Cloud. Many public cloud providers offer managed Kubernetes services. IBM Cloud offers a free tier so you can try out Kubernetes in the cloud for free!
 
 ## Appendix: Tips for Kubernetes and Helm
 

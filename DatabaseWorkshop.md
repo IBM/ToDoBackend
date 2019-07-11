@@ -27,7 +27,7 @@ Now we will show you how to use our ORM (Object Relational Mapping) library, cal
 
 This is a follow on tutorial to our [ToDoBackend tutorial](https://github.com/IBM/ToDoBackend). Please complete that before proceeding with this tutorial.
 
-**Homebrew** is needed also, to install homebrew paste this into your terminal and hit Enter:
+**Homebrew** is also needed, to install homebrew paste this into your terminal and hit Enter:
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
