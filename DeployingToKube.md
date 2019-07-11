@@ -179,7 +179,7 @@ In Xcode, use the project navigator to access chart > ToDoServer > `values.yaml`
 secretsConfig: postgresql-database
 ```
 
-Now navigate into the `/templates` folder and open up `deployment.yaml`. We need to add to the `env:` section, so we can access the password as an enviornment variable inside our Docker container. Add the following **below** the final value declared in `env:` but **above** the line `{{- if .Values.generatedBindings.enabled }}`. Make sure the indentation all matches up.
+Now navigate into the `/templates` folder and open up `deployment.yaml`. We need to add to the `env:` section, so we can access the password as an environment variable inside our Docker container. Add the following **below** the final value declared in `env:` but **above** the line `{{- if .Values.generatedBindings.enabled }}`. Make sure the indentation all matches up.
 
 ```
           - name: DBPASSWORD
