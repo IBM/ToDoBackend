@@ -1,4 +1,4 @@
-# Building a "To Do" Backend with Kitura
+# Building a "ToDo" Backend with Kitura
 
 <p align="center">
 <img src="https://www.ibm.com/cloud-computing/bluemix/sites/default/files/assets/page/catalog-swift.svg" width="120" alt="Kitura Bird">
@@ -10,12 +10,14 @@
 </a>
 </p>
 
-# Workshop Table of Contents:
+## Workshop Table of Contents:
 
-1. [Build your Kitura app](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
-2. [Connect it to a SQL database](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md)
-3. [Build your app into a Docker image and deploy it on Kubernetes.](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
-4. [Enable monitoring through Prometheus/Graphana](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+1. [Build your Kitura app](https://github.com/IBM/ToDoBackend/blob/master/README.md)
+2. [Connect it to an SQL database](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
+3. [Build your app into a Docker image and deploy it on Kubernetes.](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+4. [Enable monitoring through Prometheus/Graphana](https://github.com/IBM/ToDoBackend/blob/master/MonitoringKube.md)
+
+# Building your Kitura app
 
 The application you'll create is a "ToDo list" application, as described by the [Todo-Backend](http://todobackend.com/) project.
 
