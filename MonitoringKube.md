@@ -130,6 +130,8 @@ You can create more complex queries and apply filters according to any kubernete
 
 You now have integrated monitoring for both your Kubernetes cluster and your deployed Kitura application.
 
+Congratulations!  You have completed the workshop!
+
 ## Bonus Content
 
 * Add a Singlestat that shows how many instances of you Kitura application are currently running
