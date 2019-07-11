@@ -12,10 +12,10 @@
 
 # Workshop Table of Contents:
 
-1. [Build your Kitura app](#https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
-2. [Connect it to a SQL database](#https://github.com/IBM/ToDoBackend/blob/master/Workshop.md)
-3. [Build your app into a Docker image and deploy it on Kubernetes.](#https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
-4. [Enable monitoring through Prometheus/Graphana](#https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+1. [Build your Kitura app](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+2. [Connect it to a SQL database](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md)
+3. [Build your app into a Docker image and deploy it on Kubernetes.](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
+4. [Enable monitoring through Prometheus/Graphana](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
 
 The application you'll create is a "ToDo list" application, as described by the [Todo-Backend](http://todobackend.com/) project.
 

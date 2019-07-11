@@ -12,10 +12,10 @@
 
 # Workshop Table of Contents:
 
-1. [Build your Kitura app](#https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
-2. [Connect it to a SQL database](#https://github.com/IBM/ToDoBackend/blob/master/Workshop.md)
-3. [Build your app into a Docker image and deploy it on Kubernetes.](#https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
-4. [Enable monitoring through Prometheus/Graphana](#https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+1. [Build your Kitura app](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
+2. [Connect it to a SQL database](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md)
+3. [Build your app into a Docker image and deploy it on Kubernetes.](https://github.com/IBM/ToDoBackend/blob/master/DatabaseWorkshop.md)
+4. [Enable monitoring through Prometheus/Graphana](https://github.com/IBM/ToDoBackend/blob/master/DeployingToKube.md)
 
 ## Run the tests
 In order to implement a ToDo Backend, a server is required that provides support for storing, retrieving, deleting and updating "to do" items. The ToDoBackend project doesn't provide a specification for how the server must respond, rather it provides a set of tests which the server must pass. The "todo-backend-js-spec" project provides those tests.
