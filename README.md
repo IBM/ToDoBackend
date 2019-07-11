@@ -88,4 +88,6 @@ kitura init
 
 This creates a fully working Kitura project that provides monitoring and metrics which can then be extended with your application logic.
 
+## Next Steps
+
 Congratulations, you have created your first Kitura application.  Proceed to [the rest of the workshop](https://github.com/IBM/ToDoBackend/blob/master/Workshop.md).
